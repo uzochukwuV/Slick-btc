@@ -395,20 +395,15 @@
                 ))
             )
             (ok {
-                principal: principal-ascii,
-                interest: interest-ascii,
-                health-factor: health-ascii,
-                status: (if (< health MIN-HEALTH-FACTOR)
-                    "LIQUIDATABLE"
-                    "HEALTHY"
-                ),
+                principal: principal-amt,
+                interest: interest-amt,
+                health-factor: health
             })
         )
         (ok {
-            principal: "0",
-            interest: "0",
-            health-factor: "0",
-            status: "NO_LOAN",
+            principal: u0,
+            interest: u0,
+            health-factor: u0
         })
     )
 )

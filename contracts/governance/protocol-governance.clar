@@ -251,11 +251,10 @@
                 ))
             )
             (ok {
-                title: (get title proposal),
-                votes-for: votes-for-ascii,
-                votes-against: votes-against-ascii,
-                timelock-remaining: time-left-ascii,
-                status: status,
+                votes-for: votes-for-val,
+                votes-against: votes-against-val,
+                is-executed: (get executed proposal),
+                can-execute: (>= stacks-block-time (get execution-time proposal))
             })
         )
         err-proposal-not-found

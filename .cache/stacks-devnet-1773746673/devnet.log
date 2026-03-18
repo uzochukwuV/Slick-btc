@@ -1,0 +1,47 @@
+Mar 17 12:24:36.308 INFO Checking contracts
+Mar 17 12:24:36.346 INFO Starting Devnet
+Mar 17 12:24:36.354 INFO Listening on port 20445 for Stacks chain events
+Mar 17 12:24:36.354 INFO Observing Bitcoin chain events via Stacks node
+Mar 17 12:24:36.356 INFO Seeding block pool with 0 blocks
+Mar 17 12:24:36.387 WARN Default snapshot can not be used
+Mar 17 12:24:36.388 INFO Initiating Devnet boot sequence (working_dir: E:\apps\Slick-btc\.cache\stacks-devnet-1773746673)
+Mar 17 12:24:36.427 INFO Creating network clarity4-defi-lending.devnet
+Mar 17 12:24:36.429 INFO Starting bitcoin-node
+Mar 17 12:24:39.072 INFO Created container bitcoin-node: 3be197be02679fe50af693f3bcb2ccbd8b291ada0f8fcde36fdbce5b29878412
+Mar 17 12:24:39.657 INFO Configuring bitcoin-node
+Mar 17 12:24:40.016 INFO Initializing blockchain with fresh blocks
+Mar 17 12:24:43.478 INFO Registering addr(n3GRiDLKWuKLCw1DZmV75W1mE35qmW2tQm)#dm832d0a
+Mar 17 12:24:44.424 INFO Registering addr(mjSrB3wS4xab3kYqFktwBzfTdPg367ZJ2d)#kdxvqwc5
+Mar 17 12:24:48.433 INFO Waiting for bitcoin-node
+Mar 17 12:24:48.758 INFO Registering addr(mjSrB3wS4xab3kYqFktwBzfTdPg367ZJ2d)#kdxvqwc5
+Mar 17 12:24:50.708 INFO Registering addr(mpbqxwi3U9qkeSbSYDJn1umk6MiTg4CDq7)#5uvgma3a
+Mar 17 12:24:52.606 INFO Registering addr(n3r661yy817HN3BZvec67XM1smryNTaizX)#7g2ta3x7
+Mar 17 12:24:54.805 INFO Registering addr(mpfCFEnbtYn3QnpFmppGDiaHBqU75uYeat)#fcj90mtu
+Mar 17 12:24:57.259 INFO Registering addr(muYdXKmX9bByAueDe6KFfHd5Ff1gdN9ErG)#0ayck9fm
+Mar 17 12:24:59.097 INFO Registering addr(mg1C76bNTutiCDV3t9nWhZs3Dc8LzUufj8)#gtqjph77
+Mar 17 12:25:01.012 INFO Blockchain verification completed
+Mar 17 12:25:01.013 INFO Starting postgres
+Mar 17 12:25:37.562 INFO Created container postgres: 61472a21513a663283f1e575f1a3b8f8c9f68abb335d929c2dbd223907433359
+Mar 17 12:25:38.485 INFO Starting stacks-api
+Mar 17 12:27:17.353 INFO Created container stacks-api: 773b2e82806f25b5c0a71da03ed24d3a1ac288e52836ff880fe1a2452c486ee6
+Mar 17 12:27:25.851 INFO Importing events from C:\Users\ASUS FX95G\.clarinet\cache\devnet\events_export\events_cache.tsv
+Mar 17 12:27:25.995 ERRO Fatal: Copy command failed: docker: 'docker cp' requires 2 arguments
+
+Usage:  docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+	docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+
+Run 'docker cp --help' for more information
+
+Mar 17 12:27:25.998 INFO Handling Termination command
+Mar 17 12:27:26.618 INFO Terminating container: 3be197be02679fe50af693f3bcb2ccbd8b291ada0f8fcde36fdbce5b29878412
+Mar 17 12:27:27.101 INFO Terminating container: 773b2e82806f25b5c0a71da03ed24d3a1ac288e52836ff880fe1a2452c486ee6
+Mar 17 12:27:27.544 INFO Terminating container: 61472a21513a663283f1e575f1a3b8f8c9f68abb335d929c2dbd223907433359
+Mar 17 12:27:28.024 INFO Pruning network and containers
+Mar 17 12:27:28.075 INFO Artifacts (logs, conf, chainstates) available here: E:\apps\Slick-btc\.cache\stacks-devnet-1773746673
+Mar 17 12:27:28.075 INFO ⚠️  fatal error - Copy command failed: docker: 'docker cp' requires 2 arguments
+
+Usage:  docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+	docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+
+Run 'docker cp --help' for more information
+

@@ -96,9 +96,8 @@
                 ))
             )
                 (ok {
-                    asset: asset,
-                    price-ascii: price-str,
-                    timestamp-ascii: time-str,
+                    price: price-val,
+                    timestamp: timestamp-val,
                     source: (get source price-data)
                 })
             )

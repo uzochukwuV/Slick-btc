@@ -9,58 +9,121 @@ plan:
     - id: 0
       transactions:
         - contract-publish:
+            contract-name: flash-loan-receiver-trait
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 10630
+            path: "contracts\\traits\\flash-loan-receiver-trait.clar"
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
+            contract-name: sip010-ft-trait
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 7540
+            path: "contracts\\traits\\sip010-ft-trait.clar"
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
+            contract-name: collateral-swap
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 30950
+            path: "contracts\\flash-loan-examples\\collateral-swap.clar"
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
+            contract-name: dual-stacking-trait
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 12230
+            path: "contracts\\traits\\dual-stacking-trait.clar"
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
+            contract-name: dual-stacking-mock
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 61030
+            path: "contracts\\dual-stacking-mock.clar"
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
             contract-name: liquidator-trait
-            expected-sender: ST31AT1T96E4CF8C2QZ7FCFC99WJCTV2GTTN3ZQKB
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
             cost: 5800
             path: "contracts\\traits\\liquidator-trait.clar"
             anchor-block-only: true
             clarity-version: 4
         - contract-publish:
             contract-name: lending-pool
-            expected-sender: ST31AT1T96E4CF8C2QZ7FCFC99WJCTV2GTTN3ZQKB
-            cost: 137650
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 154610
             path: "contracts\\lending-pool.clar"
             anchor-block-only: true
             clarity-version: 4
         - contract-publish:
             contract-name: lending-pool-trait
-            expected-sender: ST31AT1T96E4CF8C2QZ7FCFC99WJCTV2GTTN3ZQKB
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
             cost: 7870
             path: "contracts\\traits\\lending-pool-trait.clar"
             anchor-block-only: true
             clarity-version: 4
         - contract-publish:
             contract-name: math-helpers
-            expected-sender: ST31AT1T96E4CF8C2QZ7FCFC99WJCTV2GTTN3ZQKB
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
             cost: 23420
             path: "contracts\\utils\\math-helpers.clar"
             anchor-block-only: true
             clarity-version: 4
         - contract-publish:
             contract-name: passkey-signer
-            expected-sender: ST31AT1T96E4CF8C2QZ7FCFC99WJCTV2GTTN3ZQKB
-            cost: 71980
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 74640
             path: "contracts\\auth\\passkey-signer.clar"
             anchor-block-only: true
             clarity-version: 4
         - contract-publish:
             contract-name: price-oracle
-            expected-sender: ST31AT1T96E4CF8C2QZ7FCFC99WJCTV2GTTN3ZQKB
-            cost: 60090
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 63560
             path: "contracts\\oracle\\price-oracle.clar"
             anchor-block-only: true
             clarity-version: 4
         - contract-publish:
             contract-name: protocol-governance
-            expected-sender: ST31AT1T96E4CF8C2QZ7FCFC99WJCTV2GTTN3ZQKB
-            cost: 106320
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 113410
             path: "contracts\\governance\\protocol-governance.clar"
             anchor-block-only: true
             clarity-version: 4
         - contract-publish:
+            contract-name: sbtc-lending-pool
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 519090
+            path: "contracts\\sbtc-lending-pool.clar"
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
+            contract-name: sbtc-token-mock
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 35410
+            path: "contracts\\sbtc-token-mock.clar"
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
+            contract-name: self-liquidation
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 28930
+            path: "contracts\\flash-loan-examples\\self-liquidation.clar"
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
+            contract-name: simple-arbitrage
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 26470
+            path: "contracts\\flash-loan-examples\\simple-arbitrage.clar"
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
             contract-name: simple-liquidator
-            expected-sender: ST31AT1T96E4CF8C2QZ7FCFC99WJCTV2GTTN3ZQKB
-            cost: 14930
+            expected-sender: STWRH8WFK2W1YD5EX8ZMT9B1B5YFT7BRBNCZCS5Q
+            cost: 21190
             path: "contracts\\liquidators\\simple-liquidator.clar"
             anchor-block-only: true
             clarity-version: 4

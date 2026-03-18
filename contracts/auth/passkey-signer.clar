@@ -49,20 +49,12 @@
         (action (string-ascii 20))
         (amount uint)
     )
-    (let (
-            ;; CLARITY 4: Convert user principal to ASCII
-            (user-str (unwrap! (to-ascii? user) "unknown"))
-            ;; CLARITY 4: Convert amount to ASCII
-            (amount-str (unwrap! (to-ascii? amount) "0"))
-        )
-        ;; Return human-readable challenge message
-        (ok {
-            message: "Authenticate transaction",
-            user: user-str,
-            action: action,
-            amount: amount-str,
-        })
-    )
+    ;; Return challenge message
+    (ok {
+        user: user,
+        action: action,
+        amount: amount
+    })
 )
 
 ;; Register a passkey for a user
@@ -244,13 +236,11 @@
     (let (
             (count-data (default-to { count: u0 } (map-get? passkey-count { user: user })))
             (count-val (get count count-data))
-            (count-ascii (unwrap! (to-ascii? count-val) "0"))
-            (user-ascii (unwrap! (to-ascii? user) "unknown"))
         )
         (ok {
-            user: user-ascii,
-            passkey-count: count-ascii,
-            status: "Passkey authentication enabled",
+            user: user,
+            passkey-count: count-val,
+            has-passkeys: (> count-val u0)
         })
     )
 )

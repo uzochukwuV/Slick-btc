@@ -57,6 +57,55 @@ path = "contracts/utils/math-helpers.clar"
 clarity_version = 4  # Clarity 4 (SIP-033)
 epoch = "3.3"
 
+# === DUAL STACKING INTEGRATION CONTRACTS ===
+
+[contracts.sip010-ft-trait]
+path = "contracts/traits/sip010-ft-trait.clar"
+clarity_version = 4  # Clarity 4 (SIP-033)
+epoch = "3.3"
+
+[contracts.dual-stacking-trait]
+path = "contracts/traits/dual-stacking-trait.clar"
+clarity_version = 4  # Clarity 4 (SIP-033)
+epoch = "3.3"
+
+[contracts.dual-stacking-mock]
+path = "contracts/dual-stacking-mock.clar"
+clarity_version = 4  # Clarity 4 (SIP-033)
+epoch = "3.3"
+
+[contracts.sbtc-token-mock]
+path = "contracts/sbtc-token-mock.clar"
+clarity_version = 4  # Clarity 4 (SIP-033)
+epoch = "3.3"
+
+[contracts.sbtc-lending-pool]
+path = "contracts/sbtc-lending-pool.clar"
+clarity_version = 4
+epoch = "3.3"
+
+# === FLASH LOAN CONTRACTS ===
+
+[contracts.flash-loan-receiver-trait]
+path = "contracts/traits/flash-loan-receiver-trait.clar"
+clarity_version = 4  # Clarity 4 (SIP-033)
+epoch = "3.3"
+
+[contracts.simple-arbitrage]
+path = "contracts/flash-loan-examples/simple-arbitrage.clar"
+clarity_version = 4  # Clarity 4 (SIP-033)
+epoch = "3.3"
+
+[contracts.self-liquidation]
+path = "contracts/flash-loan-examples/self-liquidation.clar"
+clarity_version = 4  # Clarity 4 (SIP-033)
+epoch = "3.3"
+
+[contracts.collateral-swap]
+path = "contracts/flash-loan-examples/collateral-swap.clar"
+clarity_version = 4  # Clarity 4 (SIP-033)
+epoch = "3.3"
+
 [repl.analysis]
 passes = ['check_checker']
 

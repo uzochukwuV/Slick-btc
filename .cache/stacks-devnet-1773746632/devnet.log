@@ -1,0 +1,263 @@
+Mar 17 12:23:56.476 INFO Checking contracts
+Mar 17 12:23:56.515 INFO Starting Devnet
+Mar 17 12:23:56.542 WARN Default snapshot can not be used
+Mar 17 12:23:56.543 INFO Initiating Devnet boot sequence (working_dir: E:\apps\Slick-btc\.cache\stacks-devnet-1773746632)
+Mar 17 12:23:56.554 INFO Creating network clarity4-defi-lending.devnet
+Mar 17 12:23:56.555 INFO Starting bitcoin-node
+Mar 17 12:23:56.664 INFO Listening on port 20445 for Stacks chain events
+Mar 17 12:23:56.665 INFO Observing Bitcoin chain events via Stacks node
+Mar 17 12:23:56.674 INFO Seeding block pool with 40 blocks
+Mar 17 12:23:56.674 INFO Start processing Stacks Block #0 (0x55c9...c2ee)
+Mar 17 12:23:56.675 INFO Active fork 0: Fork [], height = 0
+Mar 17 12:23:56.676 INFO Trying to append Block #0 (0x55c9...c2ee) to Fork [], height = 0
+Mar 17 12:23:56.676 INFO Stacks Block #0 (0x55c9...c2ee) successfully appended to Fork [Block #0 (0x55c9...c2ee)], height = 1
+Mar 17 12:23:56.676 INFO Active fork: 0 - Fork [Block #0 (0x55c9...c2ee)], height = 1 / 100
+Mar 17 12:23:56.676 INFO Highest competing fork height delta computed as 0 with data [0]
+Mar 17 12:23:56.676 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.676 INFO No block to confirm
+Mar 17 12:23:56.677 INFO Start processing Stacks Block #1 (0xd02e...963c)
+Mar 17 12:23:56.677 INFO Active fork 0: Fork [Block #0 (0x55c9...c2ee)], height = 1
+Mar 17 12:23:56.677 INFO Trying to append Block #1 (0xd02e...963c) to Fork [Block #0 (0x55c9...c2ee)], height = 1
+Mar 17 12:23:56.677 INFO Comparing Block #0 (0x55c9...c2ee) with Block #1 (0xd02e...963c)
+Mar 17 12:23:56.677 INFO Stacks Block #1 (0xd02e...963c) successfully appended to Fork [Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 2
+Mar 17 12:23:56.678 INFO Active fork: 0 - Fork [Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 2 / 103
+Mar 17 12:23:56.678 INFO Highest competing fork height delta computed as 0 with data [1]
+Mar 17 12:23:56.678 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.678 DEBG Blocks to rollback: []
+Mar 17 12:23:56.678 DEBG Blocks to apply: [BlockIdentifier { index: 1, hash: "0xd02e31b66782b1668bfee346b071d6b4335aef84f851b3bf3f4cdd0a8e36963c" }]
+Mar 17 12:23:56.678 INFO No block to confirm
+Mar 17 12:23:56.678 INFO Start processing Stacks Block #2 (0x202c...d3aa)
+Mar 17 12:23:56.678 INFO Active fork 0: Fork [Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 2
+Mar 17 12:23:56.678 INFO Trying to append Block #2 (0x202c...d3aa) to Fork [Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 2
+Mar 17 12:23:56.678 INFO Comparing Block #1 (0xd02e...963c) with Block #2 (0x202c...d3aa)
+Mar 17 12:23:56.678 INFO Stacks Block #2 (0x202c...d3aa) successfully appended to Fork [Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 3
+Mar 17 12:23:56.678 INFO Active fork: 0 - Fork [Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 3 / 105
+Mar 17 12:23:56.679 INFO Highest competing fork height delta computed as 0 with data [2]
+Mar 17 12:23:56.679 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.679 DEBG Blocks to rollback: []
+Mar 17 12:23:56.679 DEBG Blocks to apply: [BlockIdentifier { index: 2, hash: "0x202ce2ff36ca72317802cb74b3363f700183ea4f9b552c8d727d6f369468d3aa" }]
+Mar 17 12:23:56.679 INFO No block to confirm
+Mar 17 12:23:56.679 INFO Start processing Stacks Block #3 (0xf43f...c05f)
+Mar 17 12:23:56.679 INFO Active fork 0: Fork [Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 3
+Mar 17 12:23:56.679 INFO Trying to append Block #3 (0xf43f...c05f) to Fork [Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 3
+Mar 17 12:23:56.679 INFO Comparing Block #2 (0x202c...d3aa) with Block #3 (0xf43f...c05f)
+Mar 17 12:23:56.679 INFO Stacks Block #3 (0xf43f...c05f) successfully appended to Fork [Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 4
+Mar 17 12:23:56.679 INFO Active fork: 0 - Fork [Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 4 / 106
+Mar 17 12:23:56.679 INFO Highest competing fork height delta computed as 0 with data [3]
+Mar 17 12:23:56.679 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.679 DEBG Blocks to rollback: []
+Mar 17 12:23:56.679 DEBG Blocks to apply: [BlockIdentifier { index: 3, hash: "0xf43f6fc6e9c94b2ff06ffd177baf57ed4ad9ed2d86cef957485eb4a06b60c05f" }]
+Mar 17 12:23:56.679 INFO No block to confirm
+Mar 17 12:23:56.679 INFO Start processing Stacks Block #4 (0x9b7f...bf49)
+Mar 17 12:23:56.679 INFO Active fork 0: Fork [Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 4
+Mar 17 12:23:56.679 INFO Trying to append Block #4 (0x9b7f...bf49) to Fork [Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 4
+Mar 17 12:23:56.679 INFO Comparing Block #3 (0xf43f...c05f) with Block #4 (0x9b7f...bf49)
+Mar 17 12:23:56.679 INFO Stacks Block #4 (0x9b7f...bf49) successfully appended to Fork [Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 5
+Mar 17 12:23:56.680 INFO Active fork: 0 - Fork [Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 5 / 107
+Mar 17 12:23:56.680 INFO Highest competing fork height delta computed as 0 with data [4]
+Mar 17 12:23:56.680 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.680 DEBG Blocks to rollback: []
+Mar 17 12:23:56.680 DEBG Blocks to apply: [BlockIdentifier { index: 4, hash: "0x9b7f730672f2d02c5f93fb9fd2b59e9fdc49916ba11ded32317c542171b2bf49" }]
+Mar 17 12:23:56.680 INFO No block to confirm
+Mar 17 12:23:56.680 INFO Start processing Stacks Block #5 (0x28af...b7db)
+Mar 17 12:23:56.680 INFO Active fork 0: Fork [Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 5
+Mar 17 12:23:56.680 INFO Trying to append Block #5 (0x28af...b7db) to Fork [Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 5
+Mar 17 12:23:56.680 INFO Comparing Block #4 (0x9b7f...bf49) with Block #5 (0x28af...b7db)
+Mar 17 12:23:56.680 INFO Stacks Block #5 (0x28af...b7db) successfully appended to Fork [Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 6
+Mar 17 12:23:56.680 INFO Active fork: 0 - Fork [Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 6 / 108
+Mar 17 12:23:56.680 INFO Highest competing fork height delta computed as 0 with data [5]
+Mar 17 12:23:56.680 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.680 DEBG Blocks to rollback: []
+Mar 17 12:23:56.680 DEBG Blocks to apply: [BlockIdentifier { index: 5, hash: "0x28af3b2c2fa6a3d65fc265a9a4e9ad77d851ae3db5ce9a8e91842592d33bb7db" }]
+Mar 17 12:23:56.681 INFO No block to confirm
+Mar 17 12:23:56.681 INFO Start processing Stacks Block #6 (0x0675...1461)
+Mar 17 12:23:56.681 INFO Active fork 0: Fork [Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 6
+Mar 17 12:23:56.681 INFO Trying to append Block #6 (0x0675...1461) to Fork [Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 6
+Mar 17 12:23:56.681 INFO Comparing Block #5 (0x28af...b7db) with Block #6 (0x0675...1461)
+Mar 17 12:23:56.681 INFO Stacks Block #6 (0x0675...1461) successfully appended to Fork [Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 7
+Mar 17 12:23:56.681 INFO Active fork: 0 - Fork [Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c), Block #0 (0x55c9...c2ee)], height = 7 / 109
+Mar 17 12:23:56.681 INFO Highest competing fork height delta computed as 0 with data [6]
+Mar 17 12:23:56.681 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.681 DEBG Blocks to rollback: []
+Mar 17 12:23:56.681 DEBG Blocks to apply: [BlockIdentifier { index: 6, hash: "0x0675523c5c694e8916b3b0d644b8a3b1dfa2c00eda53fd17194508e797a21461" }]
+Mar 17 12:23:56.681 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.681 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.682 INFO Start processing Stacks Block #7 (0x896c...4463)
+Mar 17 12:23:56.682 INFO Active fork 0: Fork [Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c)], height = 6
+Mar 17 12:23:56.682 INFO Trying to append Block #7 (0x896c...4463) to Fork [Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c)], height = 6
+Mar 17 12:23:56.682 INFO Comparing Block #6 (0x0675...1461) with Block #7 (0x896c...4463)
+Mar 17 12:23:56.682 INFO Stacks Block #7 (0x896c...4463) successfully appended to Fork [Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c)], height = 7
+Mar 17 12:23:56.682 INFO Active fork: 0 - Fork [Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa), Block #1 (0xd02e...963c)], height = 7 / 110
+Mar 17 12:23:56.682 INFO Highest competing fork height delta computed as 0 with data [7]
+Mar 17 12:23:56.682 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.682 DEBG Blocks to rollback: []
+Mar 17 12:23:56.682 DEBG Blocks to apply: [BlockIdentifier { index: 7, hash: "0x896c4a165ffc825bf2d0e5816a41083ad15bd4d189cf217e9e1ff6c35af94463" }]
+Mar 17 12:23:56.682 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.682 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.682 INFO Start processing Stacks Block #8 (0xf4c2...0374)
+Mar 17 12:23:56.682 INFO Active fork 0: Fork [Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa)], height = 6
+Mar 17 12:23:56.682 INFO Trying to append Block #8 (0xf4c2...0374) to Fork [Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa)], height = 6
+Mar 17 12:23:56.682 INFO Comparing Block #7 (0x896c...4463) with Block #8 (0xf4c2...0374)
+Mar 17 12:23:56.682 INFO Stacks Block #8 (0xf4c2...0374) successfully appended to Fork [Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa)], height = 7
+Mar 17 12:23:56.682 INFO Active fork: 0 - Fork [Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f), Block #2 (0x202c...d3aa)], height = 7 / 111
+Mar 17 12:23:56.682 INFO Highest competing fork height delta computed as 0 with data [8]
+Mar 17 12:23:56.682 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.683 DEBG Blocks to rollback: []
+Mar 17 12:23:56.683 DEBG Blocks to apply: [BlockIdentifier { index: 8, hash: "0xf4c2a3e73161d6ce5b481e090d94711576381c6b4e72c621f73cb636ce050374" }]
+Mar 17 12:23:56.683 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.683 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.683 INFO Start processing Stacks Block #9 (0x0983...6737)
+Mar 17 12:23:56.683 INFO Active fork 0: Fork [Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f)], height = 6
+Mar 17 12:23:56.684 INFO Trying to append Block #9 (0x0983...6737) to Fork [Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f)], height = 6
+Mar 17 12:23:56.684 INFO Comparing Block #8 (0xf4c2...0374) with Block #9 (0x0983...6737)
+Mar 17 12:23:56.684 INFO Stacks Block #9 (0x0983...6737) successfully appended to Fork [Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f)], height = 7
+Mar 17 12:23:56.684 INFO Active fork: 0 - Fork [Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49), Block #3 (0xf43f...c05f)], height = 7 / 112
+Mar 17 12:23:56.684 INFO Highest competing fork height delta computed as 0 with data [9]
+Mar 17 12:23:56.684 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.684 DEBG Blocks to rollback: []
+Mar 17 12:23:56.684 DEBG Blocks to apply: [BlockIdentifier { index: 9, hash: "0x09838aef38eeeee045463600ac3ab637a1305668f5a33726ae8676f064866737" }]
+Mar 17 12:23:56.684 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.684 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.684 INFO Start processing Stacks Block #10 (0x43ca...98c7)
+Mar 17 12:23:56.684 INFO Active fork 0: Fork [Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49)], height = 6
+Mar 17 12:23:56.684 INFO Trying to append Block #10 (0x43ca...98c7) to Fork [Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49)], height = 6
+Mar 17 12:23:56.684 INFO Comparing Block #9 (0x0983...6737) with Block #10 (0x43ca...98c7)
+Mar 17 12:23:56.684 INFO Stacks Block #10 (0x43ca...98c7) successfully appended to Fork [Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49)], height = 7
+Mar 17 12:23:56.684 INFO Active fork: 0 - Fork [Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db), Block #4 (0x9b7f...bf49)], height = 7 / 113
+Mar 17 12:23:56.685 INFO Highest competing fork height delta computed as 0 with data [10]
+Mar 17 12:23:56.685 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.685 DEBG Blocks to rollback: []
+Mar 17 12:23:56.685 DEBG Blocks to apply: [BlockIdentifier { index: 10, hash: "0x43ca4c9f63662339bc686f8cfaaebfb2eafd5f78e49894478db8fdac3e9b98c7" }]
+Mar 17 12:23:56.685 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.685 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.685 INFO Start processing Stacks Block #11 (0x0cb5...761a)
+Mar 17 12:23:56.685 INFO Active fork 0: Fork [Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db)], height = 6
+Mar 17 12:23:56.685 INFO Trying to append Block #11 (0x0cb5...761a) to Fork [Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db)], height = 6
+Mar 17 12:23:56.685 INFO Comparing Block #10 (0x43ca...98c7) with Block #11 (0x0cb5...761a)
+Mar 17 12:23:56.685 INFO Stacks Block #11 (0x0cb5...761a) successfully appended to Fork [Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db)], height = 7
+Mar 17 12:23:56.685 INFO Active fork: 0 - Fork [Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461), Block #5 (0x28af...b7db)], height = 7 / 114
+Mar 17 12:23:56.685 INFO Highest competing fork height delta computed as 0 with data [11]
+Mar 17 12:23:56.685 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.685 DEBG Blocks to rollback: []
+Mar 17 12:23:56.685 DEBG Blocks to apply: [BlockIdentifier { index: 11, hash: "0x0cb50dea455aba7adca01f7d10aeef073e91c60fb85d24cf9089947c07cb761a" }]
+Mar 17 12:23:56.685 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.685 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.685 INFO Start processing Stacks Block #12 (0x8154...dc80)
+Mar 17 12:23:56.685 INFO Active fork 0: Fork [Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461)], height = 6
+Mar 17 12:23:56.685 INFO Trying to append Block #12 (0x8154...dc80) to Fork [Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461)], height = 6
+Mar 17 12:23:56.686 INFO Comparing Block #11 (0x0cb5...761a) with Block #12 (0x8154...dc80)
+Mar 17 12:23:56.686 INFO Stacks Block #12 (0x8154...dc80) successfully appended to Fork [Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461)], height = 7
+Mar 17 12:23:56.686 INFO Active fork: 0 - Fork [Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463), Block #6 (0x0675...1461)], height = 7 / 115
+Mar 17 12:23:56.686 INFO Highest competing fork height delta computed as 0 with data [12]
+Mar 17 12:23:56.686 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.686 DEBG Blocks to rollback: []
+Mar 17 12:23:56.686 DEBG Blocks to apply: [BlockIdentifier { index: 12, hash: "0x815459b60cbdcff999af18f311885413eb6f713e6b6104b56a76d2ff9deddc80" }]
+Mar 17 12:23:56.686 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.686 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.686 INFO Start processing Stacks Block #13 (0xc40f...bbc4)
+Mar 17 12:23:56.686 INFO Active fork 0: Fork [Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463)], height = 6
+Mar 17 12:23:56.686 INFO Trying to append Block #13 (0xc40f...bbc4) to Fork [Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463)], height = 6
+Mar 17 12:23:56.686 INFO Comparing Block #12 (0x8154...dc80) with Block #13 (0xc40f...bbc4)
+Mar 17 12:23:56.686 INFO Stacks Block #13 (0xc40f...bbc4) successfully appended to Fork [Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463)], height = 7
+Mar 17 12:23:56.686 INFO Active fork: 0 - Fork [Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374), Block #7 (0x896c...4463)], height = 7 / 116
+Mar 17 12:23:56.686 INFO Highest competing fork height delta computed as 0 with data [13]
+Mar 17 12:23:56.686 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.686 DEBG Blocks to rollback: []
+Mar 17 12:23:56.686 DEBG Blocks to apply: [BlockIdentifier { index: 13, hash: "0xc40f2d7ec95c87107eb5efb43ee15cc8f3cea4fe17b476037d389b4590f9bbc4" }]
+Mar 17 12:23:56.686 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.686 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.686 INFO Start processing Stacks Block #14 (0x0385...6c84)
+Mar 17 12:23:56.686 INFO Active fork 0: Fork [Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374)], height = 6
+Mar 17 12:23:56.686 INFO Trying to append Block #14 (0x0385...6c84) to Fork [Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374)], height = 6
+Mar 17 12:23:56.686 INFO Comparing Block #13 (0xc40f...bbc4) with Block #14 (0x0385...6c84)
+Mar 17 12:23:56.686 INFO Stacks Block #14 (0x0385...6c84) successfully appended to Fork [Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374)], height = 7
+Mar 17 12:23:56.686 INFO Active fork: 0 - Fork [Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737), Block #8 (0xf4c2...0374)], height = 7 / 117
+Mar 17 12:23:56.686 INFO Highest competing fork height delta computed as 0 with data [14]
+Mar 17 12:23:56.686 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.686 DEBG Blocks to rollback: []
+Mar 17 12:23:56.687 DEBG Blocks to apply: [BlockIdentifier { index: 14, hash: "0x038586b29088a3b421f3a356ea138e87777de22d07fec801f0c27c699a296c84" }]
+Mar 17 12:23:56.687 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.687 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.687 INFO Start processing Stacks Block #15 (0x8c18...7fe8)
+Mar 17 12:23:56.687 INFO Active fork 0: Fork [Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737)], height = 6
+Mar 17 12:23:56.687 INFO Trying to append Block #15 (0x8c18...7fe8) to Fork [Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737)], height = 6
+Mar 17 12:23:56.687 INFO Comparing Block #14 (0x0385...6c84) with Block #15 (0x8c18...7fe8)
+Mar 17 12:23:56.687 INFO Stacks Block #15 (0x8c18...7fe8) successfully appended to Fork [Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737)], height = 7
+Mar 17 12:23:56.687 INFO Active fork: 0 - Fork [Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7), Block #9 (0x0983...6737)], height = 7 / 118
+Mar 17 12:23:56.687 INFO Highest competing fork height delta computed as 0 with data [15]
+Mar 17 12:23:56.687 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.687 DEBG Blocks to rollback: []
+Mar 17 12:23:56.688 DEBG Blocks to apply: [BlockIdentifier { index: 15, hash: "0x8c186ba66fdaf3e7515b1a512cea2326fe8a7ccc75362796c169aca516237fe8" }]
+Mar 17 12:23:56.688 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.688 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.688 INFO Start processing Stacks Block #16 (0x0f51...2a45)
+Mar 17 12:23:56.688 INFO Active fork 0: Fork [Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7)], height = 6
+Mar 17 12:23:56.688 INFO Trying to append Block #16 (0x0f51...2a45) to Fork [Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7)], height = 6
+Mar 17 12:23:56.688 INFO Comparing Block #15 (0x8c18...7fe8) with Block #16 (0x0f51...2a45)
+Mar 17 12:23:56.688 INFO Stacks Block #16 (0x0f51...2a45) successfully appended to Fork [Block #16 (0x0f51...2a45), Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7)], height = 7
+Mar 17 12:23:56.688 INFO Active fork: 0 - Fork [Block #16 (0x0f51...2a45), Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a), Block #10 (0x43ca...98c7)], height = 7 / 119
+Mar 17 12:23:56.688 INFO Highest competing fork height delta computed as 0 with data [16]
+Mar 17 12:23:56.688 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.688 DEBG Blocks to rollback: []
+Mar 17 12:23:56.688 DEBG Blocks to apply: [BlockIdentifier { index: 16, hash: "0x0f51155e9df85166f3165935e12d26823d48c317722698306694a0f23a2f2a45" }]
+Mar 17 12:23:56.688 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.688 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.688 INFO Start processing Stacks Block #17 (0xcb9f...9692)
+Mar 17 12:23:56.688 INFO Active fork 0: Fork [Block #16 (0x0f51...2a45), Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a)], height = 6
+Mar 17 12:23:56.688 INFO Trying to append Block #17 (0xcb9f...9692) to Fork [Block #16 (0x0f51...2a45), Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a)], height = 6
+Mar 17 12:23:56.688 INFO Comparing Block #16 (0x0f51...2a45) with Block #17 (0xcb9f...9692)
+Mar 17 12:23:56.688 INFO Stacks Block #17 (0xcb9f...9692) successfully appended to Fork [Block #17 (0xcb9f...9692), Block #16 (0x0f51...2a45), Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a)], height = 7
+Mar 17 12:23:56.688 INFO Active fork: 0 - Fork [Block #17 (0xcb9f...9692), Block #16 (0x0f51...2a45), Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80), Block #11 (0x0cb5...761a)], height = 7 / 120
+Mar 17 12:23:56.688 INFO Highest competing fork height delta computed as 0 with data [17]
+Mar 17 12:23:56.688 INFO Active fork selected as canonical: 0
+Mar 17 12:23:56.688 DEBG Blocks to rollback: []
+Mar 17 12:23:56.688 ERRO slog-async: logger dropped messages due to channel overflow, count: 5
+Mar 17 12:23:56.689 INFO Stacks Block #18 (0x3643...afd3) successfully appended to Fork [Block #18 (0x3643...afd3), Block #17 (0xcb9f...9692), Block #16 (0x0f51...2a45), Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84), Block #13 (0xc40f...bbc4), Block #12 (0x8154...dc80)], height = 7
+Mar 17 12:23:56.689 DEBG Pruning 1 blocks and 0 forks.
+Mar 17 12:23:56.689 ERRO slog-async: logger dropped messages due to channel overflow, count: 29
+Mar 17 12:23:56.689 ERRO slog-async: logger dropped messages due to channel overflow, count: 15
+Mar 17 12:23:56.689 INFO Active fork: 0 - Fork [Block #20 (0x85a4...9af7), Block #19 (0xc727...41f6), Block #18 (0x3643...afd3), Block #17 (0xcb9f...9692), Block #16 (0x0f51...2a45), Block #15 (0x8c18...7fe8), Block #14 (0x0385...6c84)], height = 7 / 123
+Mar 17 12:23:56.689 INFO Trying to append Block #21 (0x4bf9...e4d4) to Fork [Block #20 (0x85a4...9af7), Block #19 (0xc727...41f6), Block #18 (0x3643...afd3), Block #17 (0xcb9f...9692), Block #16 (0x0f51...2a45), Block #15 (0x8c18...7fe8)], height = 6
+Mar 17 12:23:56.689 ERRO slog-async: logger dropped messages due to channel overflow, count: 45
+Mar 17 12:23:56.689 INFO Active fork: 0 - Fork [Block #22 (0xdc6b...2566), Block #21 (0x4bf9...e4d4), Block #20 (0x85a4...9af7), Block #19 (0xc727...41f6), Block #18 (0x3643...afd3), Block #17 (0xcb9f...9692), Block #16 (0x0f51...2a45)], height = 7 / 125
+Mar 17 12:23:56.689 ERRO slog-async: logger dropped messages due to channel overflow, count: 22
+Mar 17 12:23:56.689 ERRO slog-async: logger dropped messages due to channel overflow, count: 9
+Mar 17 12:23:56.689 ERRO slog-async: logger dropped messages due to channel overflow, count: 15
+Mar 17 12:23:56.689 INFO Active fork: 0 - Fork [Block #24 (0x4d7c...f6a1), Block #23 (0xb8c6...cae0), Block #22 (0xdc6b...2566), Block #21 (0x4bf9...e4d4), Block #20 (0x85a4...9af7), Block #19 (0xc727...41f6), Block #18 (0x3643...afd3)], height = 7 / 127
+Mar 17 12:23:56.689 ERRO slog-async: logger dropped messages due to channel overflow, count: 20
+Mar 17 12:23:56.689 INFO Highest competing fork height delta computed as 0 with data [25]
+Mar 17 12:23:56.690 INFO Active fork 0: Fork [Block #25 (0x79b5...a5bd), Block #24 (0x4d7c...f6a1), Block #23 (0xb8c6...cae0), Block #22 (0xdc6b...2566), Block #21 (0x4bf9...e4d4), Block #20 (0x85a4...9af7)], height = 6
+Mar 17 12:23:56.690 ERRO slog-async: logger dropped messages due to channel overflow, count: 43
+Mar 17 12:23:56.690 ERRO slog-async: logger dropped messages due to channel overflow, count: 15
+Mar 17 12:23:56.690 INFO Trying to append Block #28 (0xacd5...2ecb) to Fork [Block #27 (0xfb4e...6363), Block #26 (0x199d...5060), Block #25 (0x79b5...a5bd), Block #24 (0x4d7c...f6a1), Block #23 (0xb8c6...cae0), Block #22 (0xdc6b...2566)], height = 6
+Mar 17 12:23:56.690 ERRO slog-async: logger dropped messages due to channel overflow, count: 130
+Mar 17 12:23:56.690 ERRO slog-async: logger dropped messages due to channel overflow, count: 21
+Mar 17 12:23:56.690 ERRO slog-async: logger dropped messages due to channel overflow, count: 9
+Mar 17 12:23:56.690 ERRO slog-async: logger dropped messages due to channel overflow, count: 15
+Mar 17 12:23:56.690 INFO Start processing Stacks Block #37 (0x24ba...c8da)
+Mar 17 12:23:56.690 ERRO slog-async: logger dropped messages due to channel overflow, count: 80
+Mar 17 12:23:56.690 INFO Trying to append Block #38 (0x7cc9...769b) to Fork [Block #37 (0x24ba...c8da), Block #36 (0xf48c...5457), Block #35 (0xcf4b...94c2), Block #34 (0x8aa4...a8fc), Block #33 (0xce1b...ba6c), Block #32 (0x01d4...e594)], height = 6
+Mar 17 12:23:56.690 ERRO slog-async: logger dropped messages due to channel overflow, count: 14
+Mar 17 12:23:56.690 ERRO slog-async: logger dropped messages due to channel overflow, count: 9
+Mar 17 12:23:56.690 DEBG Removing 1 confirmed blocks from block store.
+Mar 17 12:23:56.690 DEBG Pruning 2 blocks and 0 forks.
+Mar 17 12:24:07.739 INFO Created container bitcoin-node: efcd8be1427ba027f75441d5c5541030cd47fd67cf8e159be130a4ad414cd5bf
+Mar 17 12:24:08.776 INFO Copying Bitcoin snapshot to container...
+Mar 17 12:24:08.975 ERRO Fatal: docker cp failed: docker: 'docker cp' requires 2 arguments
+
+Usage:  docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+	docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+
+Run 'docker cp --help' for more information
+
+Mar 17 12:24:08.976 INFO Handling Termination command
+Mar 17 12:24:09.571 INFO Terminating container: efcd8be1427ba027f75441d5c5541030cd47fd67cf8e159be130a4ad414cd5bf
+Mar 17 12:24:09.964 INFO Pruning network and containers
+Mar 17 12:24:09.987 INFO Artifacts (logs, conf, chainstates) available here: E:\apps\Slick-btc\.cache\stacks-devnet-1773746632
+Mar 17 12:24:09.987 INFO ⚠️  fatal error - docker cp failed: docker: 'docker cp' requires 2 arguments
+
+Usage:  docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+	docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+
+Run 'docker cp --help' for more information
+
