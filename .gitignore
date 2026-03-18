@@ -4,3 +4,6 @@ settings/
 *dist/
 *.next/
 *.log
+*.cache/
+*.DS_Store
+frontend/.next
