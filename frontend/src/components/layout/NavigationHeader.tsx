@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AlertCircle, Home, TrendingUp, Wallet, Coins, ArrowLeftRight } from "lucide-react";
+import { AlertCircle, Home, TrendingUp, Wallet, Coins, ArrowLeftRight, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { WalletButton } from "@/components/wallet/WalletButton";
@@ -27,6 +27,11 @@ const navItems = [
     title: "Lend STX",
     href: "/lend-stx",
     icon: Coins,
+  },
+  {
+    title: "Lend USDCx",
+    href: "/lend-usdcx",
+    icon: DollarSign,
   },
   {
     title: "Borrow",

@@ -3,7 +3,7 @@
 import { useLendingPool } from "@/hooks/useLendingPool";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Wallet, AlertTriangle } from "lucide-react";
+import { RefreshCw, Wallet, AlertTriangle, DollarSign } from "lucide-react";
 import { CollateralPanel } from "./CollateralPanel";
 import { LoanPanel } from "./LoanPanel";
 
@@ -12,6 +12,7 @@ export function BorrowInterface() {
 
   const SAT = 100_000_000;
   const MICRO_STX = 1_000_000;
+  const MICRO_USDCX = 1_000_000;
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
@@ -23,7 +24,7 @@ export function BorrowInterface() {
             <h1 className="text-2xl font-bold">Borrow</h1>
           </div>
           <p className="text-sm text-muted-foreground mt-1">
-            Deposit sBTC as collateral to borrow STX at 150% collateralization
+            Deposit sBTC as collateral to borrow STX or USDCx at 150% collateralization
           </p>
         </div>
         <Button
@@ -39,7 +40,7 @@ export function BorrowInterface() {
       </div>
 
       {/* Stats summary */}
-      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-5">
         <div className="rounded-lg border bg-card p-4">
           <p className="text-xs text-muted-foreground uppercase tracking-wide">STX Available</p>
           <p className="text-xl font-mono font-bold mt-1">
@@ -47,9 +48,12 @@ export function BorrowInterface() {
           </p>
         </div>
         <div className="rounded-lg border bg-card p-4">
-          <p className="text-xs text-muted-foreground uppercase tracking-wide">Total Borrowed</p>
-          <p className="text-xl font-mono font-bold mt-1">
-            {(poolData.protocolStats.totalStxBorrowed / MICRO_STX).toFixed(2)} STX
+          <p className="text-xs text-muted-foreground uppercase tracking-wide flex items-center gap-1">
+            <DollarSign className="h-3 w-3 text-green-500" />
+            USDCx Available
+          </p>
+          <p className="text-xl font-mono font-bold mt-1 text-green-600">
+            ${(poolData.usdcxLendingStats.totalUsdcxAvailable / MICRO_USDCX).toFixed(2)}
           </p>
         </div>
         <div className="rounded-lg border bg-card p-4">
@@ -59,7 +63,7 @@ export function BorrowInterface() {
           </p>
         </div>
         <div className="rounded-lg border bg-card p-4">
-          <p className="text-xs text-muted-foreground uppercase tracking-wide">Your Debt</p>
+          <p className="text-xs text-muted-foreground uppercase tracking-wide">STX Debt</p>
           <p className="text-xl font-mono font-bold mt-1 flex items-center gap-2">
             {userData.loan ? (
               <>
@@ -70,6 +74,21 @@ export function BorrowInterface() {
               </>
             ) : (
               <span className="text-muted-foreground">0 STX</span>
+            )}
+          </p>
+        </div>
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-xs text-muted-foreground uppercase tracking-wide flex items-center gap-1">
+            <DollarSign className="h-3 w-3 text-green-500" />
+            USDCx Debt
+          </p>
+          <p className="text-xl font-mono font-bold mt-1">
+            {userData.usdcxLoan ? (
+              <span className="text-green-600">
+                ${((userData.usdcxLoan.principalAmount + userData.usdcxLoan.interestAccrued) / MICRO_USDCX).toFixed(2)}
+              </span>
+            ) : (
+              <span className="text-muted-foreground">$0.00</span>
             )}
           </p>
         </div>
@@ -120,6 +139,7 @@ export function BorrowInterface() {
           <LoanPanel
             userData={userData}
             stxAvailable={poolData.protocolStats.totalStxAvailable}
+            usdcxAvailable={poolData.usdcxLendingStats.totalUsdcxAvailable}
             onRefetch={refetch}
           />
         </div>

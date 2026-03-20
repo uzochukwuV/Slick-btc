@@ -25,7 +25,7 @@ interface Props {
   onRefetch: () => void;
 }
 
-export function BorrowPanel({ userData, onRefetch }: Props) {
+export function BorrowPanel({ userData }: Props) {
   const { isConnected, connect } = useWallet();
   const [collateralAmt, setCollateralAmt] = useState("");
   const [withdrawCollateralAmt, setWithdrawCollateralAmt] = useState("");
@@ -45,7 +45,7 @@ export function BorrowPanel({ userData, onRefetch }: Props) {
     onFinish: (d: { txId: string }) => {
       console.log(`${label} tx:`, d.txId);
       setPending(null);
-      setTimeout(onRefetch, 50000);
+      // setTimeout(onRefetch, 200000);
     },
     onCancel: () => setPending(null),
   });

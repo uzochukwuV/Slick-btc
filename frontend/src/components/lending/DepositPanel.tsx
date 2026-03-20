@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useWallet } from "@/contexts/WalletContext";
 import { deposit, withdraw, claimUserRewards } from "@/services/lendingPoolService";
@@ -19,7 +18,7 @@ interface Props {
   onRefetch: () => void;
 }
 
-export function DepositPanel({ userData, onRefetch }: Props) {
+export function DepositPanel({ userData }: Props) {
   const { isConnected, connect } = useWallet();
   const [depositAmt, setDepositAmt] = useState("");
   const [withdrawAmt, setWithdrawAmt] = useState("");
@@ -31,7 +30,7 @@ export function DepositPanel({ userData, onRefetch }: Props) {
     onFinish: (d: { txId: string }) => {
       console.log(`${label} tx:`, d.txId);
       setPending(null);
-      setTimeout(onRefetch, 30000);
+      // setTimeout(onRefetch, 200000);
     },
     onCancel: () => setPending(null),
   });

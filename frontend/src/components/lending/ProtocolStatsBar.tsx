@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function ProtocolStatsBar({ data }: Props) {
-  const { protocolStats, flashLoanStats, swapStats, dualStackingStatus } = data;
+  const { protocolStats, dualStackingStatus } = data;
 
   const utilizationRate = protocolStats.totalStxAvailable > 0
     ? (protocolStats.totalStxBorrowed / (protocolStats.totalStxAvailable + protocolStats.totalStxBorrowed)) * 100

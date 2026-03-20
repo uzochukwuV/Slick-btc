@@ -4,18 +4,17 @@ import Link from "next/link";
 import { useLendingPool } from "@/hooks/useLendingPool";
 import { useWallet } from "@/contexts/WalletContext";
 import { ProtocolStatsBar } from "./ProtocolStatsBar";
-import { FlashLoanPanel } from "./FlashLoanPanel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RefreshCw, TrendingUp, Wallet, ArrowRight, Shield, Banknote, Zap } from "lucide-react";
+import { RefreshCw, TrendingUp, Wallet, ArrowRight, Zap } from "lucide-react";
 
 const SAT = 100_000_000;
 const MICRO_STX = 1_000_000;
 
 export function LendingInterface() {
   const { poolData, userData, isLoading, error, refetch } = useLendingPool();
-  const { address, isConnected } = useWallet();
+  useWallet();
 
   return (
     <div className="space-y-0">

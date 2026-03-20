@@ -4,7 +4,8 @@ stacks_node_rpc_address = "https://api.testnet.hiro.so"
 deployment_fee_rate = 10
 
 [accounts.deployer]
-mnemonic = "fitness latin hollow shadow neck woman decrease enter combine bacon grid color trick game secret gold appear measure head spot quantum caught sick one"
+mnemonic = "little aunt purchase badge enact actual pioneer stuff clever truth muffin cake typical share property worry memory bird flower pyramid letter will other purpose"
+m1 = "fitness latin hollow shadow neck woman decrease enter combine bacon grid color trick game secret gold appear measure head spot quantum caught sick one"
 mnemonic5 = "wonder behind hard salt army grain rather custom bicycle cable volcano maple"
 mnemonic4 = "glass tool abstract crystal ski drama cousin light soap post curious virtual"
 mnemonic3 = "width desk question turtle mean review betray film rare series attitude cover"

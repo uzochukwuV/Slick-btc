@@ -110,6 +110,51 @@ export interface UserStxDeposit {
   depositTime: number; // unix timestamp
 }
 
+// USDCx Types
+export interface UsdcxLendingStats {
+  totalUsdcxDeposited: number; // micro-USDCx (6 decimals)
+  totalUsdcxBorrowed: number;
+  totalUsdcxAvailable: number;
+  utilizationBps: number;
+  interestRateBps: number;
+  totalShares: number;
+}
+
+export interface UsdcxLenderApy {
+  utilizationBps: number;
+  borrowRateBps: number;
+  lenderApyBps: number;
+}
+
+export interface UserUsdcxDeposit {
+  amount: number; // micro-USDCx
+  shares: number;
+  depositTime: number;
+}
+
+export interface UserUsdcxLoan {
+  principalAmount: number; // micro-USDCx
+  interestAccrued: number;
+  borrowTime: number;
+  lastInterestUpdate: number;
+}
+
+export interface UsdcxSwapStats {
+  swapEnabled: boolean;
+  totalVolume: number;
+  totalFees: number;
+  sbtcUsdcxPrice: number;
+  stxUsdcxPrice: number;
+}
+
+export interface PoolAllocation {
+  stackingAllocationBps: number;
+  liquidityAllocationBps: number;
+  totalSbtc: number;
+  sbtcInStacking: number;
+  sbtcInLiquidity: number;
+}
+
 export interface LendingPoolData {
   protocolStats: ProtocolStats;
   flashLoanStats: FlashLoanStats;
@@ -117,6 +162,9 @@ export interface LendingPoolData {
   dualStackingStatus: DualStackingStatus;
   cycleInfo: CycleInfo;
   stxLendingStats: StxLendingStats;
+  usdcxLendingStats: UsdcxLendingStats;
+  usdcxSwapStats: UsdcxSwapStats;
+  poolAllocation: PoolAllocation;
 }
 
 export interface UserLendingData {
@@ -128,4 +176,6 @@ export interface UserLendingData {
   currentInterest: number; // microSTX
   participantInfo: ParticipantInfo | null;
   stxDeposit: UserStxDeposit | null;
+  usdcxDeposit: UserUsdcxDeposit | null;
+  usdcxLoan: UserUsdcxLoan | null;
 }

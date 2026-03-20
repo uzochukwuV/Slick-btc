@@ -24,7 +24,7 @@ interface Props {
   onRefetch: () => void;
 }
 
-export function CollateralPanel({ userData, stxAvailable, onRefetch }: Props) {
+export function CollateralPanel({ userData }: Props) {
   const { isConnected, connect } = useWallet();
   const [addAmt, setAddAmt] = useState("");
   const [withdrawAmt, setWithdrawAmt] = useState("");
@@ -36,7 +36,7 @@ export function CollateralPanel({ userData, stxAvailable, onRefetch }: Props) {
     onFinish: (d: { txId: string }) => {
       console.log(`${label} tx:`, d.txId);
       setPending(null);
-      setTimeout(onRefetch, 50000);
+      // setTimeout(onRefetch, 200000);
     },
     onCancel: () => setPending(null),
   });

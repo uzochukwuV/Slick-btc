@@ -41,6 +41,9 @@
 (define-constant err-insufficient-liquidity (err u415))
 (define-constant err-stx-transfer-failed (err u416))
 (define-constant err-swap-disabled (err u417))
+(define-constant err-usdcx-transfer-failed (err u418))
+(define-constant err-usdcx-disabled (err u419))
+(define-constant err-invalid-pair (err u420))
 
 ;; Protocol Parameters
 (define-constant COLLATERAL-RATIO u150) ;; 150% collateralization
@@ -82,6 +85,54 @@
 (define-data-var total-swap-fees-sbtc uint u0)   ;; Fees collected in sBTC
 (define-data-var total-swap-fees-stx uint u0)    ;; Fees collected in STX
 (define-data-var swap-sbtc-reserve uint u0)      ;; sBTC from swaps (separate from deposits)
+
+;; === DYNAMIC SPLIT CONFIGURATION ===
+;; Percentage of sBTC deposits that go to stacking vs liquidity
+(define-data-var stacking-allocation-bps uint u7000)  ;; 70% to stacking by default
+;; Remaining 30% stays liquid for swaps, flash loans, and lending
+
+;; === USDCx INTEGRATION ===
+;; USDCx is a stablecoin pegged to $1 USD
+;; Contract: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usdcx-v1 (testnet)
+(define-constant USDCX-DECIMALS u6)
+(define-constant USDCX-USD-PRICE u1000000)           ;; $1.00 with 6 decimals for swaps
+(define-constant USDCX-COLLATERAL-FACTOR u9800)      ;; 98% for collateral (2% haircut)
+
+;; USDCx token reference
+(define-data-var usdcx-token-contract (optional principal) none)
+
+;; USDCx lending pool state
+(define-data-var total-usdcx-deposits uint u0)       ;; Total USDCx deposited by lenders
+(define-data-var total-usdcx-shares uint u0)         ;; Share-based accounting
+(define-data-var total-usdcx-borrowed uint u0)       ;; Total USDCx borrowed
+(define-data-var total-usdcx-available uint u0)      ;; Available for borrowing
+(define-data-var usdcx-interest-rate-bps uint u400)  ;; 4% APR for USDCx loans
+
+;; USDCx swap state
+(define-data-var usdcx-swap-enabled bool true)
+(define-data-var total-swap-volume-usdcx uint u0)
+(define-data-var total-swap-fees-usdcx uint u0)
+
+;; USDCx depositor map
+(define-map usdcx-deposits
+  { user: principal }
+  {
+    amount: uint,
+    shares: uint,
+    deposit-time: uint
+  }
+)
+
+;; USDCx loans map (borrowed against sBTC collateral)
+(define-map usdcx-loans
+  { user: principal }
+  {
+    principal-amount: uint,
+    interest-accrued: uint,
+    borrow-time: uint,
+    last-interest-update: uint
+  }
+)
 
 ;; sBTC token reference (must be set after deployment)
 (define-data-var sbtc-token-contract (optional principal) none)
@@ -1394,6 +1445,7 @@
   )
 )
 
+
 ;; Withdraw STX from lending pool
 ;; Returns principal + proportional share of interest earned
 (define-public (withdraw-stx (amount uint))
@@ -1449,6 +1501,7 @@
     )
   )
 )
+
 
 ;; Get user's STX deposit info
 (define-read-only (get-user-stx-deposit (user principal))
@@ -1508,12 +1561,637 @@
     total-stx-deposited: (var-get total-stx-deposits),
     total-stx-borrowed: (var-get total-borrows),
     total-stx-available: (var-get total-stx-available),
+    ;; USDCx lending
+    total-usdcx-deposited: (var-get total-usdcx-deposits),
+    total-usdcx-borrowed: (var-get total-usdcx-borrowed),
+    total-usdcx-available: (var-get total-usdcx-available),
     ;; Price oracle
     stx-per-sbtc: (var-get stx-per-sbtc),
+    ;; Allocation
+    stacking-allocation-bps: (var-get stacking-allocation-bps),
     ;; Status
     dual-stacking-enrolled: (var-get dual-stacking-enrolled),
     protocol-paused: (var-get protocol-paused),
-    ;; Interest rate
-    interest-rate-bps: INTEREST-RATE-BPS
+    ;; Interest rates
+    stx-interest-rate-bps: INTEREST-RATE-BPS,
+    usdcx-interest-rate-bps: (var-get usdcx-interest-rate-bps)
+  })
+)
+
+;; === DYNAMIC SPLIT FUNCTIONS ===
+;; Admin can adjust the stacking vs liquidity allocation
+
+(define-public (set-stacking-allocation (allocation-bps uint))
+  (begin
+    (asserts! (is-eq tx-sender (var-get admin)) err-owner-only)
+    (asserts! (<= allocation-bps u10000) err-invalid-amount)
+    (var-set stacking-allocation-bps allocation-bps)
+    (print {
+      event: "stacking-allocation-updated",
+      allocation-bps: allocation-bps,
+      liquidity-bps: (- u10000 allocation-bps),
+      timestamp: stacks-block-time
+    })
+    (ok true)
+  )
+)
+
+;; Get current allocation
+(define-read-only (get-pool-allocation)
+  (let (
+    (stacking-bps (var-get stacking-allocation-bps))
+    (liquidity-bps (- u10000 stacking-bps))
+    (total-sbtc (var-get total-deposits))
+    (stacking-amount (/ (* total-sbtc stacking-bps) u10000))
+    (liquidity-amount (- total-sbtc stacking-amount))
+  )
+    (ok {
+      stacking-allocation-bps: stacking-bps,
+      liquidity-allocation-bps: liquidity-bps,
+      total-sbtc: total-sbtc,
+      sbtc-in-stacking: stacking-amount,
+      sbtc-in-liquidity: liquidity-amount
+    })
+  )
+)
+
+;; === USDCx TOKEN MANAGEMENT ===
+
+;; Set USDCx token contract (admin only, one-time setup)
+(define-public (set-usdcx-token-contract (token-principal principal))
+  (begin
+    (asserts! (is-eq tx-sender (var-get admin)) err-owner-only)
+    (var-set usdcx-token-contract (some token-principal))
+    (print {
+      event: "usdcx-token-set",
+      contract: token-principal,
+      timestamp: stacks-block-time
+    })
+    (ok true)
+  )
+)
+
+(define-read-only (get-usdcx-token-contract)
+  (var-get usdcx-token-contract)
+)
+
+;; === USDCx LENDING FUNCTIONS ===
+;; USDCx lenders deposit USDCx to earn interest from sBTC borrowers
+
+;; Deposit USDCx to lending pool
+(define-public (deposit-usdcx (amount uint) (token <sbtc-token>))
+  (let (
+    (current-deposit (default-to {
+        amount: u0,
+        shares: u0,
+        deposit-time: stacks-block-time
+      }
+      (map-get? usdcx-deposits { user: tx-sender })
+    ))
+    (current-shares (var-get total-usdcx-shares))
+    (current-deposits (var-get total-usdcx-deposits))
+    ;; Calculate shares: first depositor gets 1:1, subsequent get proportional
+    (new-shares (if (is-eq current-shares u0)
+                    amount
+                    (/ (* amount current-shares) current-deposits)))
+  )
+    (asserts! (not (var-get protocol-paused)) err-paused)
+    (asserts! (> amount u0) err-invalid-amount)
+
+    ;; Transfer USDCx from user to contract (using SIP-010 trait)
+    (match (contract-call? token transfer amount tx-sender CONTRACT-ADDRESS none)
+      success (begin
+        ;; Update user deposit
+        (map-set usdcx-deposits { user: tx-sender } {
+          amount: (+ (get amount current-deposit) amount),
+          shares: (+ (get shares current-deposit) new-shares),
+          deposit-time: stacks-block-time
+        })
+
+        ;; Update totals
+        (var-set total-usdcx-deposits (+ current-deposits amount))
+        (var-set total-usdcx-shares (+ current-shares new-shares))
+        (var-set total-usdcx-available (+ (var-get total-usdcx-available) amount))
+
+        (print {
+          event: "usdcx-deposit",
+          user: tx-sender,
+          amount: amount,
+          shares: new-shares,
+          total-usdcx-deposits: (var-get total-usdcx-deposits),
+          timestamp: stacks-block-time
+        })
+
+        (ok true)
+      )
+      error err-usdcx-transfer-failed
+    )
+  )
+)
+
+;; Withdraw USDCx from lending pool
+(define-public (withdraw-usdcx (amount uint) (token <sbtc-token>))
+  (let (
+    (user-deposit (unwrap! (map-get? usdcx-deposits { user: tx-sender }) err-insufficient-balance))
+    (user-shares (get shares user-deposit))
+    (user-amount (get amount user-deposit))
+    (current-shares (var-get total-usdcx-shares))
+    (current-deposits (var-get total-usdcx-deposits))
+    (available (var-get total-usdcx-available))
+    (shares-to-burn (if (>= amount user-amount)
+                        user-shares
+                        (/ (* amount user-shares) user-amount)))
+    (recipient tx-sender)
+  )
+    (asserts! (not (var-get protocol-paused)) err-paused)
+    (asserts! (> amount u0) err-invalid-amount)
+    (asserts! (<= amount user-amount) err-insufficient-balance)
+    (asserts! (<= amount available) err-insufficient-liquidity)
+
+    ;; Update user deposit
+    (if (>= amount user-amount)
+      (map-delete usdcx-deposits { user: tx-sender })
+      (map-set usdcx-deposits { user: tx-sender } {
+        amount: (- user-amount amount),
+        shares: (- user-shares shares-to-burn),
+        deposit-time: (get deposit-time user-deposit)
+      })
+    )
+
+    ;; Transfer USDCx back to user
+    (match (contract-call? token transfer amount CONTRACT-ADDRESS recipient none)
+      success (begin
+        ;; Update totals
+        (var-set total-usdcx-deposits (- current-deposits amount))
+        (var-set total-usdcx-shares (- current-shares shares-to-burn))
+        (var-set total-usdcx-available (- available amount))
+
+        (print {
+          event: "usdcx-withdraw",
+          user: tx-sender,
+          amount: amount,
+          shares-burned: shares-to-burn,
+          total-usdcx-deposits: (var-get total-usdcx-deposits),
+          timestamp: stacks-block-time
+        })
+
+        (ok true)
+      )
+      error err-usdcx-transfer-failed
+    )
+  )
+)
+
+;; === USDCx BORROWING FUNCTIONS ===
+;; Borrow USDCx against sBTC collateral
+
+;; Borrow USDCx using existing sBTC collateral
+(define-public (borrow-usdcx (amount uint) (token <sbtc-token>))
+  (let (
+    (collateral-data (unwrap! (map-get? user-collateral { user: tx-sender }) err-insufficient-collateral))
+    (collateral-sbtc (get amount collateral-data))
+    ;; Get sBTC value in USD (using STX price as proxy, assuming STX oracle reflects USD)
+    (sbtc-value-usd (/ (* collateral-sbtc (var-get stx-per-sbtc)) u1000000))
+    ;; Apply collateral factor (98% for USDCx)
+    (max-borrow-usd (/ (* sbtc-value-usd USDCX-COLLATERAL-FACTOR) u10000))
+    ;; Get existing USDCx loan
+    (current-loan (default-to {
+        principal-amount: u0,
+        interest-accrued: u0,
+        borrow-time: stacks-block-time,
+        last-interest-update: stacks-block-time
+      }
+      (map-get? usdcx-loans { user: tx-sender })
+    ))
+    ;; Also check STX loan to ensure total debt doesn't exceed collateral
+    (stx-loan (default-to {
+        principal-amount: u0,
+        interest-accrued: u0,
+        borrow-time: u0,
+        last-interest-update: u0
+      }
+      (map-get? user-loans { user: tx-sender })
+    ))
+    (existing-usdcx-debt (+ (get principal-amount current-loan) (get interest-accrued current-loan)))
+    (existing-stx-debt-usd (/ (+ (get principal-amount stx-loan) (get interest-accrued stx-loan)) u1000000))
+    (total-existing-debt (+ existing-usdcx-debt existing-stx-debt-usd))
+    (available (var-get total-usdcx-available))
+  )
+    (asserts! (not (var-get protocol-paused)) err-paused)
+    (asserts! (> amount u0) err-invalid-amount)
+    (asserts! (<= amount available) err-insufficient-liquidity)
+    ;; Check collateral ratio (150% required)
+    (asserts! (<= (* (+ total-existing-debt amount) COLLATERAL-RATIO) (* max-borrow-usd u100)) err-insufficient-collateral)
+
+    ;; Transfer USDCx to borrower
+    (match (contract-call? token transfer amount CONTRACT-ADDRESS tx-sender none)
+      success (begin
+        ;; Update loan
+        (map-set usdcx-loans { user: tx-sender } {
+          principal-amount: (+ (get principal-amount current-loan) amount),
+          interest-accrued: (get interest-accrued current-loan),
+          borrow-time: (if (is-eq (get principal-amount current-loan) u0) stacks-block-time (get borrow-time current-loan)),
+          last-interest-update: stacks-block-time
+        })
+
+        ;; Update totals
+        (var-set total-usdcx-borrowed (+ (var-get total-usdcx-borrowed) amount))
+        (var-set total-usdcx-available (- available amount))
+
+        (print {
+          event: "usdcx-borrow",
+          user: tx-sender,
+          amount: amount,
+          total-usdcx-borrowed: (var-get total-usdcx-borrowed),
+          collateral-sbtc: collateral-sbtc,
+          timestamp: stacks-block-time
+        })
+
+        (ok true)
+      )
+      error err-usdcx-transfer-failed
+    )
+  )
+)
+
+;; Repay USDCx loan
+(define-public (repay-usdcx (amount uint) (token <sbtc-token>))
+  (let (
+    (loan (unwrap! (map-get? usdcx-loans { user: tx-sender }) err-loan-not-found))
+    (principal (get principal-amount loan))
+    (interest (get interest-accrued loan))
+    (total-debt (+ principal interest))
+    (repay-amount (if (> amount total-debt) total-debt amount))
+    ;; Apply to interest first, then principal
+    (interest-payment (if (>= repay-amount interest) interest repay-amount))
+    (principal-payment (- repay-amount interest-payment))
+  )
+    (asserts! (not (var-get protocol-paused)) err-paused)
+    (asserts! (> amount u0) err-invalid-amount)
+
+    ;; Transfer USDCx from user
+    (match (contract-call? token transfer repay-amount tx-sender CONTRACT-ADDRESS none)
+      success (begin
+        ;; Update loan
+        (if (>= repay-amount total-debt)
+          (map-delete usdcx-loans { user: tx-sender })
+          (map-set usdcx-loans { user: tx-sender } {
+            principal-amount: (- principal principal-payment),
+            interest-accrued: (- interest interest-payment),
+            borrow-time: (get borrow-time loan),
+            last-interest-update: stacks-block-time
+          })
+        )
+
+        ;; Update totals
+        (var-set total-usdcx-borrowed (- (var-get total-usdcx-borrowed) principal-payment))
+        (var-set total-usdcx-available (+ (var-get total-usdcx-available) repay-amount))
+
+        (print {
+          event: "usdcx-repay",
+          user: tx-sender,
+          amount: repay-amount,
+          principal-paid: principal-payment,
+          interest-paid: interest-payment,
+          remaining-debt: (- total-debt repay-amount),
+          timestamp: stacks-block-time
+        })
+
+        (ok true)
+      )
+      error err-usdcx-transfer-failed
+    )
+  )
+)
+
+;; === USDCx SWAP FUNCTIONS ===
+;; Swap pairs: sBTC/USDCx and STX/USDCx
+
+;; Get sBTC price in USDCx (derived from STX price)
+;; Assumes: stx-per-sbtc is microSTX per sat, and we need to convert to USD
+;; For simplicity: 1 USDCx = $1, so sBTC/USDCx = sBTC/USD price
+(define-read-only (get-sbtc-usdcx-price)
+  ;; Returns USDCx per sat of sBTC
+  ;; Example: If BTC = $100k, then 1 sat = $0.001 = 1000 micro-USDCx
+  ;; This is derived from STX price: if STX=$1 and stx-per-sbtc=4000, then sBTC in USD = 4000/1M * 1 = $0.004/sat
+  ;; But we need external BTC/USD price - for now use STX as proxy
+  (let (
+    (stx-per-sat (var-get stx-per-sbtc))
+    ;; Assuming STX = $1 for simplicity, this gives us USD value
+    ;; In production, you'd have a separate BTC/USD oracle
+  )
+    stx-per-sat  ;; micro-USDCx per sat (same as microSTX if STX=$1)
+  )
+)
+
+;; Get STX price in USDCx
+;; For testnet, assume STX = $1 = 1,000,000 micro-USDCx
+(define-read-only (get-stx-usdcx-price)
+  USDCX-USD-PRICE  ;; 1 STX = 1 USDCx = 1,000,000 micro-USDCx
+)
+
+;; Swap sBTC for USDCx
+(define-public (swap-sbtc-to-usdcx (sbtc-amount uint) (sbtc-tok <sbtc-token>) (usdcx-tok <sbtc-token>))
+  (let (
+    (price (get-sbtc-usdcx-price))
+    (gross-usdcx (/ (* sbtc-amount price) u1000000))
+    (fee-bps (var-get swap-fee-bps))
+    (fee (/ (* gross-usdcx fee-bps) u10000))
+    (net-usdcx (- gross-usdcx fee))
+    (available-usdcx (var-get total-usdcx-available))
+  )
+    (asserts! (not (var-get protocol-paused)) err-paused)
+    (asserts! (var-get usdcx-swap-enabled) err-usdcx-disabled)
+    (asserts! (> sbtc-amount u0) err-invalid-amount)
+    (asserts! (<= net-usdcx available-usdcx) err-insufficient-liquidity)
+
+    ;; Transfer sBTC from user to contract
+    (match (contract-call? sbtc-tok transfer sbtc-amount tx-sender CONTRACT-ADDRESS none)
+      sbtc-success (begin
+        ;; Transfer USDCx to user
+        (match (contract-call? usdcx-tok transfer net-usdcx CONTRACT-ADDRESS tx-sender none)
+          usdcx-success (begin
+            ;; Update state
+            (var-set swap-sbtc-reserve (+ (var-get swap-sbtc-reserve) sbtc-amount))
+            (var-set total-usdcx-available (- available-usdcx net-usdcx))
+            (var-set total-swap-volume-usdcx (+ (var-get total-swap-volume-usdcx) net-usdcx))
+            (var-set total-swap-fees-usdcx (+ (var-get total-swap-fees-usdcx) fee))
+
+            (print {
+              event: "swap-sbtc-to-usdcx",
+              user: tx-sender,
+              sbtc-in: sbtc-amount,
+              usdcx-out: net-usdcx,
+              fee: fee,
+              price: price,
+              timestamp: stacks-block-time
+            })
+
+            (ok { usdcx-received: net-usdcx, fee-paid: fee })
+          )
+          error err-usdcx-transfer-failed
+        )
+      )
+      error err-token-transfer-failed
+    )
+  )
+)
+
+;; Swap USDCx for sBTC
+(define-public (swap-usdcx-to-sbtc (usdcx-amount uint) (usdcx-tok <sbtc-token>) (sbtc-tok <sbtc-token>))
+  (let (
+    (price (get-sbtc-usdcx-price))
+    (gross-sbtc (/ (* usdcx-amount u1000000) price))
+    (fee-bps (var-get swap-fee-bps))
+    (fee (/ (* gross-sbtc fee-bps) u10000))
+    (net-sbtc (- gross-sbtc fee))
+    (available-sbtc (var-get swap-sbtc-reserve))
+  )
+    (asserts! (not (var-get protocol-paused)) err-paused)
+    (asserts! (var-get usdcx-swap-enabled) err-usdcx-disabled)
+    (asserts! (> usdcx-amount u0) err-invalid-amount)
+    (asserts! (<= net-sbtc available-sbtc) err-insufficient-liquidity)
+
+    ;; Transfer USDCx from user to contract
+    (match (contract-call? usdcx-tok transfer usdcx-amount tx-sender CONTRACT-ADDRESS none)
+      usdcx-success (begin
+        ;; Transfer sBTC to user
+        (match (contract-call? sbtc-tok transfer net-sbtc CONTRACT-ADDRESS tx-sender none)
+          sbtc-success (begin
+            ;; Update state
+            (var-set swap-sbtc-reserve (- available-sbtc net-sbtc))
+            (var-set total-usdcx-available (+ (var-get total-usdcx-available) usdcx-amount))
+            (var-set total-swap-volume-sbtc (+ (var-get total-swap-volume-sbtc) net-sbtc))
+            (var-set total-swap-fees-sbtc (+ (var-get total-swap-fees-sbtc) fee))
+
+            (print {
+              event: "swap-usdcx-to-sbtc",
+              user: tx-sender,
+              usdcx-in: usdcx-amount,
+              sbtc-out: net-sbtc,
+              fee: fee,
+              price: price,
+              timestamp: stacks-block-time
+            })
+
+            (ok { sbtc-received: net-sbtc, fee-paid: fee })
+          )
+          error err-token-transfer-failed
+        )
+      )
+      error err-usdcx-transfer-failed
+    )
+  )
+)
+
+;; Swap STX for USDCx
+(define-public (swap-stx-to-usdcx (stx-amount uint) (usdcx-tok <sbtc-token>))
+  (let (
+    (price (get-stx-usdcx-price))
+    (gross-usdcx (/ (* stx-amount price) u1000000))
+    (fee-bps (var-get swap-fee-bps))
+    (fee (/ (* gross-usdcx fee-bps) u10000))
+    (net-usdcx (- gross-usdcx fee))
+    (available-usdcx (var-get total-usdcx-available))
+  )
+    (asserts! (not (var-get protocol-paused)) err-paused)
+    (asserts! (var-get usdcx-swap-enabled) err-usdcx-disabled)
+    (asserts! (> stx-amount u0) err-invalid-amount)
+    (asserts! (<= net-usdcx available-usdcx) err-insufficient-liquidity)
+
+    ;; Transfer STX from user to contract
+    (match (stx-transfer? stx-amount tx-sender CONTRACT-ADDRESS)
+      stx-success (begin
+        ;; Transfer USDCx to user
+        (match (contract-call? usdcx-tok transfer net-usdcx CONTRACT-ADDRESS tx-sender none)
+          usdcx-success (begin
+            ;; Update state
+            (var-set total-stx-available (+ (var-get total-stx-available) stx-amount))
+            (var-set total-usdcx-available (- available-usdcx net-usdcx))
+            (var-set total-swap-volume-stx (+ (var-get total-swap-volume-stx) stx-amount))
+            (var-set total-swap-volume-usdcx (+ (var-get total-swap-volume-usdcx) net-usdcx))
+            (var-set total-swap-fees-usdcx (+ (var-get total-swap-fees-usdcx) fee))
+
+            (print {
+              event: "swap-stx-to-usdcx",
+              user: tx-sender,
+              stx-in: stx-amount,
+              usdcx-out: net-usdcx,
+              fee: fee,
+              price: price,
+              timestamp: stacks-block-time
+            })
+
+            (ok { usdcx-received: net-usdcx, fee-paid: fee })
+          )
+          error err-usdcx-transfer-failed
+        )
+      )
+      error err-stx-transfer-failed
+    )
+  )
+)
+
+;; Swap USDCx for STX
+(define-public (swap-usdcx-to-stx (usdcx-amount uint) (usdcx-tok <sbtc-token>))
+  (let (
+    (price (get-stx-usdcx-price))
+    (gross-stx (/ (* usdcx-amount u1000000) price))
+    (fee-bps (var-get swap-fee-bps))
+    (fee (/ (* gross-stx fee-bps) u10000))
+    (net-stx (- gross-stx fee))
+    (available-stx (var-get total-stx-available))
+    (recipient tx-sender)
+  )
+    (asserts! (not (var-get protocol-paused)) err-paused)
+    (asserts! (var-get usdcx-swap-enabled) err-usdcx-disabled)
+    (asserts! (> usdcx-amount u0) err-invalid-amount)
+    (asserts! (<= net-stx available-stx) err-insufficient-liquidity)
+
+    ;; Transfer USDCx from user to contract
+    (match (contract-call? usdcx-tok transfer usdcx-amount tx-sender CONTRACT-ADDRESS none)
+      usdcx-success (begin
+        ;; Transfer STX to user
+        (match (stx-transfer? net-stx CONTRACT-ADDRESS recipient)
+          stx-success (begin
+            ;; Update state
+            (var-set total-stx-available (- available-stx net-stx))
+            (var-set total-usdcx-available (+ (var-get total-usdcx-available) usdcx-amount))
+            (var-set total-swap-volume-usdcx (+ (var-get total-swap-volume-usdcx) usdcx-amount))
+            (var-set total-swap-volume-stx (+ (var-get total-swap-volume-stx) net-stx))
+            (var-set total-swap-fees-stx (+ (var-get total-swap-fees-stx) fee))
+
+            (print {
+              event: "swap-usdcx-to-stx",
+              user: tx-sender,
+              usdcx-in: usdcx-amount,
+              stx-out: net-stx,
+              fee: fee,
+              price: price,
+              timestamp: stacks-block-time
+            })
+
+            (ok { stx-received: net-stx, fee-paid: fee })
+          )
+          error err-stx-transfer-failed
+        )
+      )
+      error err-usdcx-transfer-failed
+    )
+  )
+)
+
+;; === USDCx ADMIN FUNCTIONS ===
+
+(define-public (set-usdcx-swap-enabled (enabled bool))
+  (begin
+    (asserts! (is-eq tx-sender (var-get admin)) err-owner-only)
+    (var-set usdcx-swap-enabled enabled)
+    (print {
+      event: "usdcx-swap-enabled-updated",
+      enabled: enabled,
+      timestamp: stacks-block-time
+    })
+    (ok true)
+  )
+)
+
+(define-public (set-usdcx-interest-rate (rate-bps uint))
+  (begin
+    (asserts! (is-eq tx-sender (var-get admin)) err-owner-only)
+    (asserts! (<= rate-bps u2000) err-invalid-amount)  ;; Max 20% APR
+    (var-set usdcx-interest-rate-bps rate-bps)
+    (print {
+      event: "usdcx-interest-rate-updated",
+      rate-bps: rate-bps,
+      timestamp: stacks-block-time
+    })
+    (ok true)
+  )
+)
+
+;; === USDCx READ-ONLY FUNCTIONS ===
+
+(define-read-only (get-user-usdcx-deposit (user principal))
+  (ok (map-get? usdcx-deposits { user: user }))
+)
+
+(define-read-only (get-user-usdcx-loan (user principal))
+  (ok (map-get? usdcx-loans { user: user }))
+)
+
+(define-read-only (get-usdcx-lending-stats)
+  (let (
+    (deposited (var-get total-usdcx-deposits))
+    (borrowed (var-get total-usdcx-borrowed))
+    (available (var-get total-usdcx-available))
+    (utilization (if (> (+ borrowed available) u0)
+                     (/ (* borrowed u10000) (+ borrowed available))
+                     u0))
+  )
+    (ok {
+      total-usdcx-deposited: deposited,
+      total-usdcx-borrowed: borrowed,
+      total-usdcx-available: available,
+      utilization-bps: utilization,
+      interest-rate-bps: (var-get usdcx-interest-rate-bps),
+      total-shares: (var-get total-usdcx-shares)
+    })
+  )
+)
+
+(define-read-only (get-usdcx-lender-apy)
+  (let (
+    (borrowed (var-get total-usdcx-borrowed))
+    (available (var-get total-usdcx-available))
+    (total-pool (+ borrowed available))
+    (utilization (if (> total-pool u0)
+                     (/ (* borrowed u10000) total-pool)
+                     u0))
+    (interest-rate (var-get usdcx-interest-rate-bps))
+    (lender-apy-bps (/ (* interest-rate utilization) u10000))
+  )
+    (ok {
+      utilization-bps: utilization,
+      borrow-rate-bps: interest-rate,
+      lender-apy-bps: lender-apy-bps
+    })
+  )
+)
+
+(define-read-only (get-usdcx-swap-stats)
+  (ok {
+    swap-enabled: (var-get usdcx-swap-enabled),
+    total-volume: (var-get total-swap-volume-usdcx),
+    total-fees: (var-get total-swap-fees-usdcx),
+    sbtc-usdcx-price: (get-sbtc-usdcx-price),
+    stx-usdcx-price: (get-stx-usdcx-price)
+  })
+)
+
+;; Get complete protocol status including USDCx
+(define-read-only (get-protocol-summary)
+  (ok {
+    ;; sBTC Pool
+    total-sbtc-deposits: (var-get total-deposits),
+    sbtc-in-stacking: (/ (* (var-get total-deposits) (var-get stacking-allocation-bps)) u10000),
+    sbtc-in-liquidity: (- (var-get total-deposits) (/ (* (var-get total-deposits) (var-get stacking-allocation-bps)) u10000)),
+    dual-stacking-enrolled: (var-get dual-stacking-enrolled),
+    ;; STX Pool
+    total-stx-deposited: (var-get total-stx-deposits),
+    total-stx-borrowed: (var-get total-borrows),
+    total-stx-available: (var-get total-stx-available),
+    stx-interest-rate-bps: INTEREST-RATE-BPS,
+    ;; USDCx Pool
+    total-usdcx-deposited: (var-get total-usdcx-deposits),
+    total-usdcx-borrowed: (var-get total-usdcx-borrowed),
+    total-usdcx-available: (var-get total-usdcx-available),
+    usdcx-interest-rate-bps: (var-get usdcx-interest-rate-bps),
+    ;; Prices
+    stx-per-sbtc: (var-get stx-per-sbtc),
+    usdcx-price: USDCX-USD-PRICE,
+    ;; Status
+    protocol-paused: (var-get protocol-paused),
+    stacking-allocation-bps: (var-get stacking-allocation-bps)
   })
 )

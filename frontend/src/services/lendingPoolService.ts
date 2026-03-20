@@ -46,9 +46,9 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 async function withRetry<T>(fn: () => Promise<T>, retries = 2, delayMs = 1000): Promise<T> {
   try {
     return await fn();
-  } catch (error: any) {
-    // Check for rate limiting or network errors
-    if (retries > 0 && (error?.message?.includes("429") || error?.message?.includes("Failed to fetch"))) {
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    if (retries > 0 && (msg.includes("429") || msg.includes("Failed to fetch"))) {
       console.warn(`Rate limited, retrying in ${delayMs}ms...`);
       await delay(delayMs);
       return withRetry(fn, retries - 1, delayMs * 2);
@@ -91,11 +91,8 @@ async function readOnlyDual(functionName: string, functionArgs: unknown[] = []) 
   }
 }
 
-function uint(v: any): number {
-  if (typeof v === "number") return v;
-  if (typeof v === "string") return parseInt(v, 10);
-  if (v?.value !== undefined) return uint(v.value);
-  return 0;
+function uint(v: { value: unknown }): number {
+  return parseInt(String(v.value));
 }
 
 function sbtcContractArgs() {
@@ -110,10 +107,10 @@ export async function getPoolStatus(): Promise<ProtocolStats> {
     const r = await readOnly("get-pool-status");
     const v = cvToJSON(r).value;
     return {
-      totalSbtcDeposits: uint(v["total-sbtc-deposits"]),
-      totalStxBorrowed: uint(v["total-stx-borrowed"]),
-      totalStxAvailable: uint(v["total-stx-available"]),
-      stxPerSbtc: uint(v["stx-per-sbtc"]),
+      totalSbtcDeposits: uint(v.value["total-sbtc-deposits"]),
+      totalStxBorrowed: uint(v.value["total-stx-borrowed"]),
+      totalStxAvailable: uint(v.value["total-stx-available"]),
+      stxPerSbtc: uint(v.value["stx-per-sbtc"]),
       dualStackingEnrolled: v["dual-stacking-enrolled"]?.value ?? false,
       protocolPaused: v["protocol-paused"]?.value ?? false,
     };
@@ -140,10 +137,10 @@ export async function getFlashLoanStats(): Promise<FlashLoanStats> {
     const v = cvToJSON(r).value;
     return {
       enabled: v.enabled?.value ?? false,
-      feeBps: uint(v["fee-bps"]),
-      totalVolume: uint(v["total-volume"]),
-      totalFees: uint(v["total-fees"]),
-      availableLiquidity: uint(v["available-liquidity"]),
+      feeBps: uint(v.value["fee-bps"]),
+      totalVolume: uint(v.value["total-volume"]),
+      totalFees: uint(v.value["total-fees"]),
+      availableLiquidity: uint(v.value["available-liquidity"]),
     };
   } catch {
     return { enabled: false, feeBps: 9, totalVolume: 0, totalFees: 0, availableLiquidity: 0 };
@@ -156,13 +153,13 @@ export async function getSwapStats(): Promise<SwapStats> {
     const v = cvToJSON(r).value;
     return {
       enabled: v.enabled?.value ?? false,
-      feeBps: uint(v["fee-bps"]),
-      totalVolumeSbtc: uint(v["total-volume-sbtc"]),
-      totalVolumeStx: uint(v["total-volume-stx"]),
-      totalFeesSbtc: uint(v["total-fees-sbtc"]),
-      totalFeesStx: uint(v["total-fees-stx"]),
-      sbtcReserve: uint(v["sbtc-reserve"]),
-      stxLiquidity: uint(v["stx-liquidity"]),
+      feeBps: uint(v.value["fee-bps"]),
+      totalVolumeSbtc: uint(v.value["total-volume-sbtc"]),
+      totalVolumeStx: uint(v.value["total-volume-stx"]),
+      totalFeesSbtc: uint(v.value["total-fees-sbtc"]),
+      totalFeesStx: uint(v.value["total-fees-stx"]),
+      sbtcReserve: uint(v.value["sbtc-reserve"]),
+      stxLiquidity: uint(v.value["stx-liquidity"]),
       price: uint(v.price),
     };
   } catch {
@@ -186,8 +183,8 @@ export async function getDualStackingStatus(): Promise<DualStackingStatus> {
     const v = cvToJSON(r).value;
     return {
       enrolled: v.enrolled?.value ?? false,
-      totalRewards: uint(v["total-rewards"]),
-      poolBalance: uint(v["pool-balance"]),
+      totalRewards: uint(v.value["total-rewards"]),
+      poolBalance: uint(v.value["pool-balance"]),
       eligibleForEnrollment: v["eligible-for-enrollment"]?.value ?? false,
     };
   } catch {
@@ -220,9 +217,9 @@ export async function getSwapQuoteSbtcToStx(sbtcAmount: number): Promise<SwapQuo
     const r = await readOnly("get-swap-quote-sbtc-to-stx", [uintCV(sbtcAmount)]);
     const v = cvToJSON(r).value;
     return {
-      inputAmount: uint(v["input-sbtc"]),
-      outputAmount: uint(v["output-stx"]),
-      fee: uint(v["fee-stx"]),
+      inputAmount: uint(v.value["input-sbtc"]),
+      outputAmount: uint(v.value["output-stx"]),
+      fee: uint(v.value["fee-stx"]),
       price: uint(v.price),
     };
   } catch {
@@ -235,9 +232,9 @@ export async function getSwapQuoteStxToSbtc(stxAmount: number): Promise<SwapQuot
     const r = await readOnly("get-swap-quote-stx-to-sbtc", [uintCV(stxAmount)]);
     const v = cvToJSON(r).value;
     return {
-      inputAmount: uint(v["input-stx"]),
-      outputAmount: uint(v["output-sbtc"]),
-      fee: uint(v["fee-sbtc"]),
+      inputAmount: uint(v.value["input-stx"]),
+      outputAmount: uint(v.value["output-sbtc"]),
+      fee: uint(v.value["fee-sbtc"]),
       price: uint(v.price),
     };
   } catch {
@@ -253,9 +250,9 @@ export async function getCycleInfo(): Promise<CycleInfo> {
     if (!r) return { cycleId: 0, snapshotCount: 0, totalRewards: 0, finalized: false };
     const v = cvToJSON(r).value;
     return {
-      cycleId: uint(v["cycle-id"]),
-      snapshotCount: uint(v["snapshot-count"]),
-      totalRewards: uint(v["total-rewards"]),
+      cycleId: uint(v.value["cycle-id"]),
+      snapshotCount: uint(v.value["snapshot-count"]),
+      totalRewards: uint(v.value["total-rewards"]),
       finalized: v.finalized?.value ?? false,
     };
   } catch {
@@ -277,9 +274,9 @@ export async function getParticipantInfo(
     return {
       enrolled: v.enrolled?.value ?? false,
       rewardedAddress: v["rewarded-address"]?.value ?? "",
-      sbtcBalance: uint(v["sbtc-balance"]),
-      stxRatio: uint(v["stx-ratio"]),
-      lastCycleProcessed: uint(v["last-cycle-processed"]),
+      sbtcBalance: uint(v.value["sbtc-balance"]),
+      stxRatio: uint(v.value["stx-ratio"]),
+      lastCycleProcessed: uint(v.value["last-cycle-processed"]),
     };
   } catch {
     return null;
@@ -294,13 +291,15 @@ export async function getUserDeposit(
   try {
     const r = await readOnly("get-user-deposit", [principalCV(user)]);
     const json = cvToJSON(r);
+    
     const inner = json.value;
-    if (!inner || inner.type === "none") return null;
-    const v = inner.value ?? inner;
+    
+    const v = inner.value;
+   
     return {
-      amount: uint(v.amount),
-      depositTime: uint(v["deposit-time"]),
-      shares: uint(v.shares),
+      amount: uint(v.value["amount"]),
+      depositTime: uint(v.value["deposit-time"]),
+      shares: uint(v.value["shares"]),
     };
   } catch {
     return null;
@@ -315,7 +314,7 @@ export async function getUserCollateral(
     const json = cvToJSON(r);
     const inner = json.value;
     if (!inner || inner.type === "none") return null;
-    const v = inner.value ?? inner;
+    const v = inner.value.value ?? inner;
     return {
       amount: uint(v.amount),
       asset: v.asset?.value ?? "sBTC",
@@ -333,10 +332,10 @@ export async function getUserLoan(user: string): Promise<UserLoan | null> {
     if (!inner || inner.type === "none") return null;
     const v = inner.value ?? inner;
     return {
-      principalAmount: uint(v["principal-amount"]),
-      interestAccrued: uint(v["interest-accrued"]),
-      borrowTime: uint(v["borrow-time"]),
-      lastInterestUpdate: uint(v["last-interest-update"]),
+      principalAmount: uint(v.value["principal-amount"]),
+      interestAccrued: uint(v.value["interest-accrued"]),
+      borrowTime: uint(v.value["borrow-time"]),
+      lastInterestUpdate: uint(v.value["last-interest-update"]),
     };
   } catch {
     return null;
@@ -350,13 +349,13 @@ export async function getLoanStatus(user: string): Promise<LoanStatus> {
     return {
       principal: uint(v.principal),
       interest: uint(v.interest),
-      totalDebtStx: uint(v["total-debt-stx"]),
-      collateralSbtcSats: uint(v["collateral-sbtc-sats"]),
-      collateralStxValue: uint(v["collateral-stx-value"]),
-      healthFactor: uint(v["health-factor"]),
+      totalDebtStx: uint(v.value["total-debt-stx"]),
+      collateralSbtcSats: uint(v.value["collateral-sbtc-sats"]),
+      collateralStxValue: uint(v.value["collateral-stx-value"]),
+      healthFactor: uint(v.value["health-factor"]),
       isHealthy: v["is-healthy"]?.value ?? true,
       dualStacking: v["dual-stacking"]?.value ?? false,
-      stxPerSbtc: uint(v["stx-per-sbtc"]),
+      stxPerSbtc: uint(v.value["stx-per-sbtc"]),
     };
   } catch {
     return {
@@ -493,13 +492,14 @@ export async function getStxLendingStats(): Promise<StxLendingStats> {
   try {
     const r = await readOnly("get-stx-lending-stats");
     const v = cvToJSON(r).value;
+   
     return {
-      totalStxDeposited: uint(v["total-stx-deposited"]),
-      totalStxBorrowed: uint(v["total-stx-borrowed"]),
-      totalStxAvailable: uint(v["total-stx-available"]),
-      utilizationBps: uint(v["utilization-bps"]),
-      interestRateBps: uint(v["interest-rate-bps"]),
-      totalShares: uint(v["total-shares"]),
+      totalStxDeposited: uint(v.value["total-stx-deposited"]),
+      totalStxBorrowed: uint(v.value["total-stx-borrowed"]),
+      totalStxAvailable: uint(v.value["total-stx-available"]),
+      utilizationBps: uint(v.value["utilization-bps"]),
+      interestRateBps: uint(v.value["interest-rate-bps"]),
+      totalShares: uint(v.value["total-shares"]),
     };
   } catch {
     return {
@@ -517,11 +517,12 @@ export async function getStxLendingStats(): Promise<StxLendingStats> {
 export async function getStxLenderApy(): Promise<StxLenderApy> {
   try {
     const r = await readOnly("get-stx-lender-apy");
-    const v = cvToJSON(r).value;
+    const v = cvToJSON(r).value.value;
+    console.log("getStxLenderApy value:", v);
     return {
-      utilizationBps: uint(v["utilization-bps"]),
-      borrowRateBps: uint(v["borrow-rate-bps"]),
-      lenderApyBps: uint(v["lender-apy-bps"]),
+      utilizationBps: uint(v.value["utilization-bps"]),
+      borrowRateBps: uint(v.value["borrow-rate-bps"]),
+      lenderApyBps: uint(v.value["lender-apy-bps"]),
     };
   } catch {
     return {
@@ -538,12 +539,200 @@ export async function getUserStxDeposit(user: string): Promise<UserStxDeposit | 
     const r = await readOnly("get-user-stx-deposit", [principalCV(user)]);
     const json = cvToJSON(r);
     const inner = json.value;
+    
+    const v = inner.value;
+    return {
+      amount: uint(v.value["amount"]),
+      shares: uint(v.value["shares"]),
+      depositTime: uint(v.value["deposit-time"]),
+    };
+  } catch {
+    return null;
+  }
+}
+
+// ─── USDCx Lending Functions ──────────────────────────────────────────────────
+
+import type {
+  UsdcxLendingStats,
+  UsdcxLenderApy,
+  UserUsdcxDeposit,
+  UserUsdcxLoan,
+  UsdcxSwapStats,
+  PoolAllocation,
+} from "@/types/lending";
+
+// USDCx token contract (testnet)
+const USDCX_CONTRACT =
+  process.env.NEXT_PUBLIC_USDCX_CONTRACT ||
+  "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usdcx-v1";
+
+function usdcxContractArgs() {
+  const [addr, name] = USDCX_CONTRACT.split(".");
+  return contractPrincipalCV(addr, name);
+}
+
+// Deposit USDCx to earn interest
+export function depositUsdcx(amount: number, cb: TxCallbacks) {
+  write("deposit-usdcx", [uintCV(amount), usdcxContractArgs()], cb);
+}
+
+// Withdraw USDCx from lending pool
+export function withdrawUsdcx(amount: number, cb: TxCallbacks) {
+  write("withdraw-usdcx", [uintCV(amount), usdcxContractArgs()], cb);
+}
+
+// Borrow USDCx against sBTC collateral
+export function borrowUsdcx(amount: number, cb: TxCallbacks) {
+  write("borrow-usdcx", [uintCV(amount), usdcxContractArgs()], cb);
+}
+
+// Repay USDCx loan
+export function repayUsdcx(amount: number, cb: TxCallbacks) {
+  write("repay-usdcx", [uintCV(amount), usdcxContractArgs()], cb);
+}
+
+// Swap sBTC for USDCx
+export function swapSbtcToUsdcx(sbtcAmount: number, cb: TxCallbacks) {
+  write("swap-sbtc-to-usdcx", [uintCV(sbtcAmount), sbtcContractArgs(), usdcxContractArgs()], cb);
+}
+
+// Swap USDCx for sBTC
+export function swapUsdcxToSbtc(usdcxAmount: number, cb: TxCallbacks) {
+  write("swap-usdcx-to-sbtc", [uintCV(usdcxAmount), usdcxContractArgs(), sbtcContractArgs()], cb);
+}
+
+// Swap STX for USDCx
+export function swapStxToUsdcx(stxAmount: number, cb: TxCallbacks) {
+  write("swap-stx-to-usdcx", [uintCV(stxAmount), usdcxContractArgs()], cb);
+}
+
+// Swap USDCx for STX
+export function swapUsdcxToStx(usdcxAmount: number, cb: TxCallbacks) {
+  write("swap-usdcx-to-stx", [uintCV(usdcxAmount), usdcxContractArgs()], cb);
+}
+
+// Get USDCx lending stats
+export async function getUsdcxLendingStats(): Promise<UsdcxLendingStats> {
+  try {
+    const r = await readOnly("get-usdcx-lending-stats");
+    const v = cvToJSON(r).value;
+    return {
+      totalUsdcxDeposited: uint(v.value["total-usdcx-deposited"]),
+      totalUsdcxBorrowed: uint(v.value["total-usdcx-borrowed"]),
+      totalUsdcxAvailable: uint(v.value["total-usdcx-available"]),
+      utilizationBps: uint(v.value["utilization-bps"]),
+      interestRateBps: uint(v.value["interest-rate-bps"]),
+      totalShares: uint(v.value["total-shares"]),
+    };
+  } catch {
+    return {
+      totalUsdcxDeposited: 0,
+      totalUsdcxBorrowed: 0,
+      totalUsdcxAvailable: 0,
+      utilizationBps: 0,
+      interestRateBps: 400,
+      totalShares: 0,
+    };
+  }
+}
+
+// Get USDCx lender APY
+export async function getUsdcxLenderApy(): Promise<UsdcxLenderApy> {
+  try {
+    const r = await readOnly("get-usdcx-lender-apy");
+    const v = cvToJSON(r).value;
+    return {
+      utilizationBps: uint(v.value["utilization-bps"]),
+      borrowRateBps: uint(v.value["borrow-rate-bps"]),
+      lenderApyBps: uint(v.value["lender-apy-bps"]),
+    };
+  } catch {
+    return {
+      utilizationBps: 0,
+      borrowRateBps: 400,
+      lenderApyBps: 0,
+    };
+  }
+}
+
+// Get USDCx swap stats
+export async function getUsdcxSwapStats(): Promise<UsdcxSwapStats> {
+  try {
+    const r = await readOnly("get-usdcx-swap-stats");
+    const v = cvToJSON(r).value;
+    return {
+      swapEnabled: v["swap-enabled"]?.value ?? false,
+      totalVolume: uint(v.value["total-volume"]),
+      totalFees: uint(v.value["total-fees"]),
+      sbtcUsdcxPrice: uint(v.value["sbtc-usdcx-price"]),
+      stxUsdcxPrice: uint(v.value["stx-usdcx-price"]),
+    };
+  } catch {
+    return {
+      swapEnabled: false,
+      totalVolume: 0,
+      totalFees: 0,
+      sbtcUsdcxPrice: 4000,
+      stxUsdcxPrice: 1000000,
+    };
+  }
+}
+
+// Get pool allocation (stacking vs liquidity split)
+export async function getPoolAllocation(): Promise<PoolAllocation> {
+  try {
+    const r = await readOnly("get-pool-allocation");
+    const v = cvToJSON(r).value;
+    return {
+      stackingAllocationBps: uint(v.value["stacking-allocation-bps"]),
+      liquidityAllocationBps: uint(v.value["liquidity-allocation-bps"]),
+      totalSbtc: uint(v.value["total-sbtc"]),
+      sbtcInStacking: uint(v.value["sbtc-in-stacking"]),
+      sbtcInLiquidity: uint(v.value["sbtc-in-liquidity"]),
+    };
+  } catch {
+    return {
+      stackingAllocationBps: 7000,
+      liquidityAllocationBps: 3000,
+      totalSbtc: 0,
+      sbtcInStacking: 0,
+      sbtcInLiquidity: 0,
+    };
+  }
+}
+
+// Get user's USDCx deposit
+export async function getUserUsdcxDeposit(user: string): Promise<UserUsdcxDeposit | null> {
+  try {
+    const r = await readOnly("get-user-usdcx-deposit", [principalCV(user)]);
+    const json = cvToJSON(r);
+    const inner = json.value;
     if (!inner || inner.type === "none") return null;
     const v = inner.value ?? inner;
     return {
       amount: uint(v.amount),
       shares: uint(v.shares),
-      depositTime: uint(v["deposit-time"]),
+      depositTime: uint(v.value["deposit-time"]),
+    };
+  } catch {
+    return null;
+  }
+}
+
+// Get user's USDCx loan
+export async function getUserUsdcxLoan(user: string): Promise<UserUsdcxLoan | null> {
+  try {
+    const r = await readOnly("get-user-usdcx-loan", [principalCV(user)]);
+    const json = cvToJSON(r);
+    const inner = json.value;
+    if (!inner || inner.type === "none") return null;
+    const v = inner.value ?? inner;
+    return {
+      principalAmount: uint(v.value["principal-amount"]),
+      interestAccrued: uint(v.value["interest-accrued"]),
+      borrowTime: uint(v.value["borrow-time"]),
+      lastInterestUpdate: uint(v.value["last-interest-update"]),
     };
   } catch {
     return null;

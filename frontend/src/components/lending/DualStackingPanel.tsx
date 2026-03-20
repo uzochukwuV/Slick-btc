@@ -25,7 +25,7 @@ interface Props {
   onRefetch: () => void;
 }
 
-export function DualStackingPanel({ poolData, userData, isAdmin, onRefetch }: Props) {
+export function DualStackingPanel({ poolData, userData, isAdmin }: Props) {
   const { isConnected, connect } = useWallet();
   const [pending, setPending] = useState<string | null>(null);
 
@@ -49,7 +49,7 @@ export function DualStackingPanel({ poolData, userData, isAdmin, onRefetch }: Pr
     onFinish: (d: { txId: string }) => {
       console.log(`${label} tx:`, d.txId);
       setPending(null);
-      setTimeout(onRefetch, 50000);
+      // setTimeout(onRefetch, 200000);
     },
     onCancel: () => setPending(null),
   });
